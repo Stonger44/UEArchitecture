@@ -17,7 +17,7 @@ void AShip::BeginPlay()
 	Super::BeginPlay();
 	
 	UE_LOG(LogTemp, Warning, TEXT("Impulse Strength: %f"), ImpulseStrength);
-
+	UE_LOG(LogTemp, Warning, TEXT("Torque Strength: %f"), TorqueStrength);
 }
 
 // Called every frame
