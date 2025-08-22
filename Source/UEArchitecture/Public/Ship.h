@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Ship.generated.h"
 
 UCLASS()
@@ -31,7 +32,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
 	float TorqueStrength = 10.f;
 
-private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Graphics")
+	UStaticMeshComponent* ShipMesh;
 
+private:
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* CameraBoom;
 
 };
