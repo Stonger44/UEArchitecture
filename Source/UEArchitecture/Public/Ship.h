@@ -6,7 +6,11 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "InputActionValue.h"
 #include "Ship.generated.h"
+
+class UInputMappingContext;
+class UInputAction;
 
 UCLASS()
 class UEARCHITECTURE_API AShip : public APawn
@@ -35,6 +39,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Graphics")
 	UStaticMeshComponent* ShipMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
+	UInputMappingContext* ShipMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
+	UInputAction* ThrustAction;
+
+	void Thrust(FInputActionValue& value);
 
 private:
 	UPROPERTY(VisibleAnywhere)

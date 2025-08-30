@@ -2,6 +2,7 @@
 
 
 #include "Ship.h"
+#include "EnhancedInputComponent.h"
 
 // Sets default values
 AShip::AShip()
@@ -42,5 +43,18 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		// Bind Actions to Functions
+	}
+
 }
 
+void AShip::Thrust(FInputActionValue& value)
+{
+	bool currentValue = value.Get<bool>();
+	if (currentValue)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("IA_Thrust triggered!"));
+	}
+}
