@@ -45,8 +45,20 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
 	UInputAction* ThrustAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
+	UInputAction* RotateAction;
 
-	void Thrust(const FInputActionValue& value);
+	/*UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
+	UInputAction* RotateLeftAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
+	UInputAction* RotateRightAction;*/
+
+	void Thrust(const FInputActionValue& inputValue);
+	void Rotate(const FInputActionValue& inputValue);
+	//void RotateLeft(const FInputActionValue& inputValue);
+	//void RotateRight(const FInputActionValue& inputValue);
 
 private:
 	UPROPERTY(VisibleAnywhere)

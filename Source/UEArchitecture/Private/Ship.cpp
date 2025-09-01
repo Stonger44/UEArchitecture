@@ -3,6 +3,7 @@
 
 #include "Ship.h"
 #include "EnhancedInputComponent.h"
+#include <EnhancedInputSubsystems.h>
 
 // Sets default values
 AShip::AShip()
@@ -20,6 +21,8 @@ AShip::AShip()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
+
 }
 
 // Called when the game starts or when spawned
@@ -27,8 +30,13 @@ void AShip::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Impulse Strength: %f"), ImpulseStrength);
-	UE_LOG(LogTemp, Warning, TEXT("Torque Strength: %f"), TorqueStrength);
+	if (APlayerController* playerController = Cast<APlayerController>(GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* enhancedInputLocalPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(playerController->GetLocalPlayer()))
+		{
+			enhancedInputLocalPlayerSubsystem->AddMappingContext(ShipMappingContext, 0);
+		}
+	}
 }
 
 // Called every frame
@@ -47,14 +55,52 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		// Bind Actions to Functions
 		EnhancedInputComponent->BindAction(ThrustAction, ETriggerEvent::Triggered, this, &AShip::Thrust);
+		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AShip::Rotate);
+		//EnhancedInputComponent->BindAction(RotateLeftAction, ETriggerEvent::Triggered, this, &AShip::RotateLeft);
+		//EnhancedInputComponent->BindAction(RotateRightAction, ETriggerEvent::Triggered, this, &AShip::RotateRight);
 	}
 
 }
 
-void AShip::Thrust(const FInputActionValue& value)
+void AShip::Thrust(const FInputActionValue& inputValue)
 {
-	if (bool currentValue = value.Get<bool>())
+	if (bool currentValue = inputValue.Get<bool>())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("IA_Thrust triggered!"));
 	}
 }
+
+void AShip::Rotate(const FInputActionValue& inputValue)
+{
+	if (float currentValue = inputValue.Get<float>())
+	{
+		if (currentValue < 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("IA_Rotate Left triggered!"));
+		}
+		else if (currentValue > 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("IA_Rotate Right triggered!"));
+		}
+		else if (currentValue == 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("IA_Rotate 0 triggered!"));
+		}
+	}
+}
+
+//void AShip::RotateLeft(const FInputActionValue& inputValue)
+//{
+//	if (bool currentValue = inputValue.Get<bool>())
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("IA_RotateLeft triggered!"));
+//	}
+//}
+//
+//void AShip::RotateRight(const FInputActionValue& inputValue)
+//{
+//	if (bool currentValue = inputValue.Get<bool>())
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("IA_RotateRight triggered!"));
+//	}
+//}
