@@ -56,8 +56,6 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		// Bind Actions to Functions
 		EnhancedInputComponent->BindAction(ThrustAction, ETriggerEvent::Triggered, this, &AShip::Thrust);
 		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AShip::Rotate);
-		//EnhancedInputComponent->BindAction(RotateLeftAction, ETriggerEvent::Triggered, this, &AShip::RotateLeft);
-		//EnhancedInputComponent->BindAction(RotateRightAction, ETriggerEvent::Triggered, this, &AShip::RotateRight);
 	}
 
 }
@@ -88,19 +86,3 @@ void AShip::Rotate(const FInputActionValue& inputValue)
 		}
 	}
 }
-
-//void AShip::RotateLeft(const FInputActionValue& inputValue)
-//{
-//	if (bool currentValue = inputValue.Get<bool>())
-//	{
-//		UE_LOG(LogTemp, Warning, TEXT("IA_RotateLeft triggered!"));
-//	}
-//}
-//
-//void AShip::RotateRight(const FInputActionValue& inputValue)
-//{
-//	if (bool currentValue = inputValue.Get<bool>())
-//	{
-//		UE_LOG(LogTemp, Warning, TEXT("IA_RotateRight triggered!"));
-//	}
-//}
