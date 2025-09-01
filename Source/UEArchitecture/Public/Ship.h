@@ -46,7 +46,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
 	UInputAction* ThrustAction;
 
-	void Thrust(FInputActionValue& value);
+	void Thrust(const FInputActionValue& value);
 
 private:
 	UPROPERTY(VisibleAnywhere)

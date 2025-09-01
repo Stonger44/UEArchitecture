@@ -46,14 +46,14 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		// Bind Actions to Functions
+		EnhancedInputComponent->BindAction(ThrustAction, ETriggerEvent::Triggered, this, &AShip::Thrust);
 	}
 
 }
 
-void AShip::Thrust(FInputActionValue& value)
+void AShip::Thrust(const FInputActionValue& value)
 {
-	bool currentValue = value.Get<bool>();
-	if (currentValue)
+	if (bool currentValue = value.Get<bool>())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("IA_Thrust triggered!"));
 	}
