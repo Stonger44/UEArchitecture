@@ -64,7 +64,10 @@ void AShip::Thrust(const FInputActionValue& inputValue)
 {
 	if (bool currentValue = inputValue.Get<bool>())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("IA_Thrust triggered!"));
+		// UE_LOG(LogTemp, Warning, TEXT("IA_Thrust triggered!"));
+		const FVector impulse = FVector(0, 0, 1) * ImpulseStrength;
+
+		ShipMesh->AddImpulse(impulse, NAME_None, true);
 	}
 }
 
@@ -72,17 +75,15 @@ void AShip::Rotate(const FInputActionValue& inputValue)
 {
 	if (float currentValue = inputValue.Get<float>())
 	{
+		// UE_LOG(LogTemp, Warning, TEXT("Input Value: %f"), currentValue)
+
 		if (currentValue < 0)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("IA_Rotate Left triggered!"));
+			// UE_LOG(LogTemp, Warning, TEXT("IA_Rotate Left triggered!"));
 		}
 		else if (currentValue > 0)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("IA_Rotate Right triggered!"));
-		}
-		else if (currentValue == 0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("IA_Rotate 0 triggered!"));
+			// UE_LOG(LogTemp, Warning, TEXT("IA_Rotate Right triggered!"));
 		}
 	}
 }
