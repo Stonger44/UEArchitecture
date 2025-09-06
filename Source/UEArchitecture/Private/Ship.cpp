@@ -16,12 +16,14 @@ AShip::AShip()
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(ShipMesh);
-	CameraBoom->TargetArmLength = 1000.f;
+	CameraBoom->TargetArmLength = 1800.f;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+
+	ShipMesh->SetAngularDamping(5);
 
 }
 
@@ -64,8 +66,7 @@ void AShip::Thrust(const FInputActionValue& inputValue)
 {
 	if (bool currentValue = inputValue.Get<bool>())
 	{
-		// UE_LOG(LogTemp, Warning, TEXT("IA_Thrust triggered!"));
-		const FVector impulse = FVector(0, 0, 1) * ImpulseStrength;
+		const FVector impulse = GetActorUpVector() * ImpulseStrength;
 
 		ShipMesh->AddImpulse(impulse, NAME_None, true);
 	}
@@ -76,14 +77,9 @@ void AShip::Rotate(const FInputActionValue& inputValue)
 	if (float currentValue = inputValue.Get<float>())
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("Input Value: %f"), currentValue)
+		const FVector torque = FVector(-currentValue, 0, 0) * TorqueStrength;
 
-		if (currentValue < 0)
-		{
-			// UE_LOG(LogTemp, Warning, TEXT("IA_Rotate Left triggered!"));
-		}
-		else if (currentValue > 0)
-		{
-			// UE_LOG(LogTemp, Warning, TEXT("IA_Rotate Right triggered!"));
-		}
+		ShipMesh->AddTorqueInRadians(torque, NAME_None, true);
+
 	}
 }
