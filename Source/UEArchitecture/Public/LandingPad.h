@@ -1,0 +1,38 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+/*-----TODO-----*\
+-Landing
+	-Speed Threshold
+	-Rotation Threshold
+	-Must land completely on pad
+		-small walls with blinking lights on either side of pad, if ship hits these, game over
+	-Celebration on successful landing
+
+	-Physics Hit notification that ship has landed
+\*-----TODO-----*/
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "LandingPad.generated.h"
+
+UCLASS()
+class UEARCHITECTURE_API ALandingPad : public AActor
+{
+	GENERATED_BODY()
+	
+public:	
+	// Sets default values for this actor's properties
+	ALandingPad();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+};
