@@ -35,10 +35,10 @@ protected:
 	UStaticMeshComponent* ShipMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
-	float ImpulseStrength = 30.f;
+	float ImpulseStrength = 30;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
-	float TorqueStrength = 10.f;
+	float TorqueStrength = 10;
 
 	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
 	UInputMappingContext* ShipMappingContext;

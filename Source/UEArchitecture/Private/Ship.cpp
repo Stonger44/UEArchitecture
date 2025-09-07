@@ -16,7 +16,7 @@ AShip::AShip()
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(ShipMesh);
-	CameraBoom->TargetArmLength = 1800.f;
+	CameraBoom->TargetArmLength = 1800;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
@@ -67,8 +67,11 @@ void AShip::Thrust(const FInputActionValue& inputValue)
 	if (bool currentValue = inputValue.Get<bool>())
 	{
 		const FVector impulse = GetActorUpVector() * ImpulseStrength;
+		// UE_LOG(LogTemp, Warning, TEXT("GetActorUpVector Impulse: %s"), *impulse.ToString());
 
 		ShipMesh->AddImpulse(impulse, NAME_None, true);
+
+		// DrawDebugSphere(GetWorld(), ShipMesh->GetCenterOfMass(), 10, 16, FColor::Green, false, -1, 1, .5);
 	}
 }
 
