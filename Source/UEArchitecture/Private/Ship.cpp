@@ -66,10 +66,10 @@ void AShip::Thrust(const FInputActionValue& inputValue)
 {
 	if (bool currentValue = inputValue.Get<bool>())
 	{
-		const FVector impulse = GetActorUpVector() * ImpulseStrength;
-		// UE_LOG(LogTemp, Warning, TEXT("GetActorUpVector Impulse: %s"), *impulse.ToString());
+		const FVector thrust = GetActorUpVector() * ThrustStrength;
+		// UE_LOG(LogTemp, Warning, TEXT("GetActorUpVector Impulse: %s"), *thrust.ToString());
 
-		ShipMesh->AddImpulse(impulse, NAME_None, true);
+		ShipMesh->AddForce(thrust, NAME_None, true);
 
 		// DrawDebugSphere(GetWorld(), ShipMesh->GetCenterOfMass(), 10, 16, FColor::Green, false, -1, 1, .5);
 	}
