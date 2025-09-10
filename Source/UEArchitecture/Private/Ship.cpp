@@ -16,7 +16,7 @@ AShip::AShip()
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(ShipMesh);
-	CameraBoom->TargetArmLength = 1800;
+	CameraBoom->TargetArmLength = 2000;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
