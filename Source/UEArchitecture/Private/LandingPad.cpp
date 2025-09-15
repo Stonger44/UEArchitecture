@@ -25,3 +25,20 @@ void ALandingPad::Tick(float DeltaTime)
 
 }
 
+void ALandingPad::NotifyHit
+(
+	class UPrimitiveComponent* MyComp,
+	AActor* Other,
+	class UPrimitiveComponent* OtherComp,
+	bool bSelfMoved,
+	FVector HitLocation,
+	FVector HitNormal,
+	FVector NormalImpulse,
+	const FHitResult& Hit
+)
+{
+	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+
+	// Hit event logic
+	UE_LOG(LogTemp, Warning, TEXT("GOOOOAAAALL!!!!"));
+}
