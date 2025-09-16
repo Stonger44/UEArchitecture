@@ -2,6 +2,7 @@
 
 
 #include "LandingPad.h"
+#include "Ship.h"
 
 // Sets default values
 ALandingPad::ALandingPad()
@@ -39,6 +40,9 @@ void ALandingPad::NotifyHit
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
-	// Hit event logic
-	UE_LOG(LogTemp, Warning, TEXT("GOOOOAAAALL!!!!"));
+	if (Other && Other != this && Other->IsA(AShip::StaticClass()))
+	{
+		// Hit event logic
+		UE_LOG(LogTemp, Warning, TEXT("GOOOOAAAALL!!!!"));
+	}
 }

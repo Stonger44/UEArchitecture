@@ -3,7 +3,7 @@
 
 #include "Ship.h"
 #include "EnhancedInputComponent.h"
-#include <EnhancedInputSubsystems.h>
+#include "EnhancedInputSubsystems.h"
 
 // Sets default values
 AShip::AShip()
@@ -62,9 +62,9 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AShip::Thrust(const FInputActionValue& inputValue)
+void AShip::Thrust(const FInputActionValue& InputValue)
 {
-	if (bool currentValue = inputValue.Get<bool>())
+	if (bool currentValue = InputValue.Get<bool>())
 	{
 		const FVector thrust = GetActorUpVector() * ThrustStrength;
 		// UE_LOG(LogTemp, Warning, TEXT("GetActorUpVector Impulse: %s"), *thrust.ToString());
@@ -75,9 +75,9 @@ void AShip::Thrust(const FInputActionValue& inputValue)
 	}
 }
 
-void AShip::Rotate(const FInputActionValue& inputValue)
+void AShip::Rotate(const FInputActionValue& InputValue)
 {
-	if (float currentValue = inputValue.Get<float>())
+	if (float currentValue = InputValue.Get<float>())
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("Input Value: %f"), currentValue)
 		const FVector torque = FVector(-currentValue, 0, 0) * TorqueStrength;
