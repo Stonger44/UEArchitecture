@@ -47,6 +47,6 @@ protected:
 	virtual void BeginPlay() override;
 
 private:	
-
+	bool bShipHasLanded = false;
 
 };

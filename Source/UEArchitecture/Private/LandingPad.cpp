@@ -40,8 +40,9 @@ void ALandingPad::NotifyHit
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
-	if (Other && Other != this && Other->IsA(AShip::StaticClass()))
+	if (!bShipHasLanded && Other && Other != this && Other->IsA(AShip::StaticClass()))
 	{
+		bShipHasLanded = true;
 		// Hit event logic
 		UE_LOG(LogTemp, Warning, TEXT("GOOOOAAAALL!!!!"));
 	}
