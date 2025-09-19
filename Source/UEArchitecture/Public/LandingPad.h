@@ -53,7 +53,7 @@ protected:
 	float MaxLandingRotation = 12;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
-	float MaxLandingSpeed = 200;
+	float MaxLandingSpeed = 250;
 
 private:	
 	bool bShipHasLanded = false;
