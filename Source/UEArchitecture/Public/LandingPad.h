@@ -46,8 +46,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	bool IsShipRotationSafe(AActor* Other);
+	bool IsShipSpeedSafe(AActor* Other);
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
-	float MaxShipRotation = 12;
+	float MaxLandingRotation = 12;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
+	float MaxLandingSpeed = 300;
 
 private:	
 	bool bShipHasLanded = false;
