@@ -46,7 +46,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
+	float MaxShipRotation = 12;
+
 private:	
 	bool bShipHasLanded = false;
 
+	float RotationThreshold;
 };

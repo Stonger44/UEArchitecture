@@ -16,7 +16,10 @@ ALandingPad::ALandingPad()
 void ALandingPad::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// Calculate Tilt Threshold
+	RotationThreshold = FMath::Cos(FMath::DegreesToRadians(MaxShipRotation));
+	UE_LOG(LogTemp, Warning, TEXT("Rotation Threshold: %f"), RotationThreshold);
 }
 
 // Called every frame
@@ -40,10 +43,32 @@ void ALandingPad::NotifyHit
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
+	// Add Landing safety Checks
+	// -Is Ship rotation within threshold?
+	// -Is Ship speed within threshold?
+
 	if (!bShipHasLanded && Other && Other != this && Other->IsA(AShip::StaticClass()))
 	{
-		bShipHasLanded = true;
-		// Hit event logic
-		UE_LOG(LogTemp, Warning, TEXT("GOOOOAAAALL!!!!"));
+		FVector shipUpVector = Other->GetActorUpVector();
+		
+		// DotProduct for ship alignment
+		float shipUpAlignment = FVector::DotProduct(shipUpVector, FVector::UpVector);
+		UE_LOG(LogTemp, Warning, TEXT("Ship Up Alignment: %f"), shipUpAlignment);
+
+		// Compare ship alignment with threshold
+		bool bIsShipRotationSafe = shipUpAlignment >= RotationThreshold;
+		UE_LOG(LogTemp, Warning, TEXT("Rotation Threshold: %f"), RotationThreshold);
+		UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), bIsShipRotationSafe ? TEXT("True") : TEXT("False"));
+
+		if (bIsShipRotationSafe)
+		{
+			bShipHasLanded = true;
+			UE_LOG(LogTemp, Warning, TEXT("SAAAAFE!!!!"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
+		}
+		
 	}
 }
