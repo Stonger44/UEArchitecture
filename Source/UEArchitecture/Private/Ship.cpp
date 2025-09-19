@@ -2,6 +2,7 @@
 
 
 #include "Ship.h"
+#include "LandingPad.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
@@ -39,6 +40,10 @@ void AShip::BeginPlay()
 			enhancedInputLocalPlayerSubsystem->AddMappingContext(ShipMappingContext, 0);
 		}
 	}
+
+	// Calculate Landing Rotation Threshold
+	LandingRotationThreshold = FMath::Cos(FMath::DegreesToRadians(MaxLandingRotation));
+	UE_LOG(LogTemp, Warning, TEXT("Landing Rotation Threshold: %f"), LandingRotationThreshold);
 }
 
 // Called every frame
@@ -85,4 +90,65 @@ void AShip::Rotate(const FInputActionValue& InputValue)
 		ShipMesh->AddTorqueInRadians(torque, NAME_None, true);
 
 	}
+}
+
+void AShip::NotifyHit
+(
+	class UPrimitiveComponent* MyComp,
+	AActor* Other,
+	class UPrimitiveComponent* OtherComp,
+	bool bSelfMoved,
+	FVector HitLocation,
+	FVector HitNormal,
+	FVector NormalImpulse,
+	const FHitResult& Hit
+)
+{
+	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+
+	if (!bShipHasLanded && Other && Other != this && Other->IsA(ALandingPad::StaticClass()))
+	{
+		bool bIsShipVelocitySafe = IsShipSpeedSafe();
+		bool bIsShipRotationSafe = IsShipRotationSafe();
+
+		if (bIsShipVelocitySafe && bIsShipRotationSafe)
+		{
+			bShipHasLanded = true;
+			UE_LOG(LogTemp, Warning, TEXT("SAAAAFE!!!!"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
+		}
+	}
+}
+
+bool AShip::IsShipSpeedSafe()
+{
+	FVector ShipVelocity = this->GetVelocity();
+
+	float shipSpeed = ShipVelocity.Size();
+
+	bool bIsShipSpeedSafe = shipSpeed <= MaxLandingSpeed;
+	UE_LOG(LogTemp, Warning, TEXT("Ship speed: %f"), shipSpeed);
+	UE_LOG(LogTemp, Warning, TEXT("Max Landing speed: %f"), MaxLandingSpeed);
+	UE_LOG(LogTemp, Warning, TEXT("Ship Speed is Safe: %s"), bIsShipSpeedSafe ? TEXT("True") : TEXT("False"));
+
+	return bIsShipSpeedSafe;
+}
+
+bool AShip::IsShipRotationSafe()
+{
+	FVector shipUpVector = this->GetActorUpVector();
+
+	// DotProduct for ship alignment
+	float shipUpAlignment = FVector::DotProduct(shipUpVector, FVector::UpVector);
+	UE_LOG(LogTemp, Warning, TEXT("Ship Up Alignment: %f"), shipUpAlignment);
+
+	// Compare ship alignment with threshold
+	bool bIsShipRotationSafe = shipUpAlignment >= LandingRotationThreshold;
+	UE_LOG(LogTemp, Warning, TEXT("Rotation Threshold: %f"), LandingRotationThreshold);
+	UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), bIsShipRotationSafe ? TEXT("True") : TEXT("False"));
+
+	return bIsShipRotationSafe;
 }

@@ -27,6 +27,18 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void NotifyHit
+	(
+		class UPrimitiveComponent* MyComp,
+		AActor* Other,
+		class UPrimitiveComponent* OtherComp,
+		bool bSelfMoved,
+		FVector HitLocation,
+		FVector HitNormal,
+		FVector NormalImpulse,
+		const FHitResult& Hit
+	) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -49,8 +61,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
 	UInputAction* RotateAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
+	float MaxLandingRotation = 12;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
+	float MaxLandingSpeed = 200;
+
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
+
+	bool IsShipRotationSafe();
+	bool IsShipSpeedSafe();
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -58,4 +79,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
+
+	bool bShipHasLanded = false;
+
+	float LandingRotationThreshold;
 };
