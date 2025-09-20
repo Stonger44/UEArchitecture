@@ -5,6 +5,7 @@
 #include "LandingPad.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AShip::AShip()
@@ -119,6 +120,10 @@ void AShip::NotifyHit
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
+			
+			// Restart Level
+			FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+			UGameplayStatics::OpenLevel(this, CurrentlevelName, false);
 		}
 	}
 }
