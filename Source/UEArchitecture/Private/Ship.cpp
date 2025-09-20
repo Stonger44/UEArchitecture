@@ -109,22 +109,27 @@ void AShip::NotifyHit
 
 	if (!bShipHasLanded && Other && Other != this && Other->IsA(ALandingPad::StaticClass()))
 	{
-		bool bIsShipVelocitySafe = IsShipSpeedSafe();
-		bool bIsShipRotationSafe = IsShipRotationSafe();
+		CheckShipLanding();
+	}
+}
 
-		if (bIsShipVelocitySafe && bIsShipRotationSafe)
-		{
-			bShipHasLanded = true;
-			UE_LOG(LogTemp, Warning, TEXT("SAAAAFE!!!!"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
-			
-			// Restart Level
-			FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-			UGameplayStatics::OpenLevel(this, CurrentlevelName, false);
-		}
+void AShip::CheckShipLanding()
+{
+	bool bIsShipVelocitySafe = IsShipSpeedSafe();
+	bool bIsShipRotationSafe = IsShipRotationSafe();
+
+	if (bIsShipVelocitySafe && bIsShipRotationSafe)
+	{
+		bShipHasLanded = true;
+		UE_LOG(LogTemp, Warning, TEXT("SAAAAFE!!!!"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
+
+		// Restart Level
+		FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+		UGameplayStatics::OpenLevel(this, CurrentlevelName, false);
 	}
 }
 

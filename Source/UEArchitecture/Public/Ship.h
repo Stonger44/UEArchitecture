@@ -62,14 +62,15 @@ protected:
 	UInputAction* RotateAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
-	float MaxLandingRotation = 12;
+	float MaxLandingRotation = 15;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
-	float MaxLandingSpeed = 250;
+	float MaxLandingSpeed = 300;
 
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
 
+	void CheckShipLanding();
 	bool IsShipRotationSafe();
 	bool IsShipSpeedSafe();
 
