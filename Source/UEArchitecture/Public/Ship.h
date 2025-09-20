@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enums.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -39,7 +40,7 @@ public:
 		const FHitResult& Hit
 	) override;
 
-	bool HasShipLanded() const { return bShipHasLanded; }
+	EShipStatus CurrentShipStatus() const { return ShipStatus; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -64,10 +65,13 @@ protected:
 	UInputAction* RotateAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
-	float MaxLandingRotation = 15;
+	float MaxLandingRotation = 25;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
-	float MaxLandingSpeed = 300;
+	float MaxLandingSpeed = 250;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Status")
+	EShipStatus ShipStatus = EShipStatus::IsReady;
 
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
@@ -75,6 +79,8 @@ protected:
 	void CheckShipLanding();
 	bool IsShipRotationSafe();
 	bool IsShipSpeedSafe();
+	void ShipLanded();
+	void ShipCrashed();
 	void TriggerLevelRestart();
 	void RestartLevel();
 
@@ -85,8 +91,8 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
 
-	bool bShipHasLanded = false;
-	bool bShipHasCrashed = false;
+	//bool bShipHasLanded = false;
+	//bool bShipHasCrashed = false;
 
 	float LandingRotationThreshold;
 
