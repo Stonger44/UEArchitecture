@@ -3,6 +3,7 @@
 
 #include "Ship.h"
 #include "LandingPad.h"
+#include "LaunchPad.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
@@ -107,9 +108,22 @@ void AShip::NotifyHit
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
-	if (!bShipHasLanded && Other && Other != this && Other->IsA(ALandingPad::StaticClass()))
+	if (Other && Other != this)
 	{
-		CheckShipLanding();
+		if (!bShipHasLanded && Other->IsA(ALandingPad::StaticClass()))
+		{
+			CheckShipLanding();
+		}
+
+		// TODO: this condition only stops the restart initially; once the ship launches, if it hits the launchpad, it should trigger a crash
+		if (!bShipHasCrashed && !(Other->IsA(ALaunchPad::StaticClass())))
+		{
+			bShipHasCrashed = true;
+			UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
+			UE_LOG(LogTemp, Warning, TEXT("Restarting Level!"));
+
+			TriggerLevelRestart();
+		}
 	}
 }
 
@@ -122,14 +136,6 @@ void AShip::CheckShipLanding()
 	{
 		bShipHasLanded = true;
 		UE_LOG(LogTemp, Warning, TEXT("SAAAAFE!!!!"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
-
-		// Restart Level
-		FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-		UGameplayStatics::OpenLevel(this, CurrentlevelName, false);
 	}
 }
 
@@ -161,4 +167,16 @@ bool AShip::IsShipRotationSafe()
 	UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), bIsShipRotationSafe ? TEXT("True") : TEXT("False"));
 
 	return bIsShipRotationSafe;
+}
+
+void AShip::TriggerLevelRestart()
+{
+	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &AShip::RestartLevel, 2.0f, false);
+}
+
+void AShip::RestartLevel()
+{
+	// Restart Level
+	FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+	UGameplayStatics::OpenLevel(this, CurrentlevelName, false);
 }

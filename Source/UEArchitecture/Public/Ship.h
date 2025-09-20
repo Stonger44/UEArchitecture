@@ -39,6 +39,8 @@ public:
 		const FHitResult& Hit
 	) override;
 
+	bool HasShipLanded() const { return bShipHasLanded; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -61,10 +63,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Ship | Input")
 	UInputAction* RotateAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
 	float MaxLandingRotation = 15;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Landing Pad | Safety")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
 	float MaxLandingSpeed = 300;
 
 	void Thrust(const FInputActionValue& inputValue);
@@ -73,6 +75,8 @@ protected:
 	void CheckShipLanding();
 	bool IsShipRotationSafe();
 	bool IsShipSpeedSafe();
+	void TriggerLevelRestart();
+	void RestartLevel();
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -82,6 +86,9 @@ private:
 	UCameraComponent* Camera;
 
 	bool bShipHasLanded = false;
+	bool bShipHasCrashed = false;
 
 	float LandingRotationThreshold;
+
+	FTimerHandle LevelLoadTimer;
 };
