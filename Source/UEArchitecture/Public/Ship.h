@@ -68,7 +68,7 @@ protected:
 	float MaxLandingRotation = 25;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
-	float MaxLandingSpeed = 250;
+	float MaxLandingSpeed = 225;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Status")
 	EShipStatus ShipStatus = EShipStatus::IsReady;
@@ -76,9 +76,10 @@ protected:
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
 
-	void CheckShipLanding();
+	void CheckShipLanding(AActor* Other);
 	bool IsShipRotationSafe();
 	bool IsShipSpeedSafe();
+	void ShipReady();
 	void ShipLanded();
 	void ShipCrashed();
 	void TriggerLevelRestart();

@@ -121,7 +121,7 @@ void AShip::NotifyHit
 		{
 			if (Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
 			{
-				CheckShipLanding();
+				CheckShipLanding(Other);
 			}
 			//else if (false)
 			//{
@@ -135,16 +135,29 @@ void AShip::NotifyHit
 	}
 }
 
-void AShip::CheckShipLanding()
+void AShip::CheckShipLanding(AActor* Other)
 {
 	if (IsShipSpeedSafe() && IsShipRotationSafe())
 	{
-		ShipLanded();
+		if (ALaunchPad* LaunchPad = Cast<ALaunchPad>(Other))
+		{
+			ShipReady();
+		}
+		else if (ALandingPad* LandingPad = Cast<ALandingPad>(Other))
+		{
+			ShipLanded();
+		}
 	}
 	else
 	{
 		ShipCrashed();
 	}
+}
+
+void AShip::ShipReady()
+{
+	ShipStatus = EShipStatus::IsReady;
+	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, Ready!"));
 }
 
 void AShip::ShipLanded()
