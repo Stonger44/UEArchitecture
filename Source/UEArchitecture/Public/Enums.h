@@ -9,15 +9,17 @@
 UENUM(BlueprintType) // lets you use it in Blueprints too
 enum class EShipStatus : uint8
 {
-	Ready		UMETA(DispayName = "Ready"),
+	Ready		UMETA(DisplayName = "Ready"),
 	Launched	UMETA(DisplayName = "Launched"),
 	Landed		UMETA(DisplayName = "Landed"),
 	Crashed		UMETA(DisplayName = "Crashed")
 };
 
-UCLASS()
-class UEARCHITECTURE_API UEnums : public UObject
-{
-	GENERATED_BODY()
-	
-};
+//UENUM(BlueprintType)
+//enum class EGameState : uint8
+//{
+//	MainMenu    UMETA(DisplayName = "Main Menu"),
+//	Playing     UMETA(DisplayName = "Playing"),
+//	Paused      UMETA(DisplayName = "Paused"),
+//	GameOver    UMETA(DisplayName = "Game Over")
+//};

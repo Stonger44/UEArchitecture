@@ -68,7 +68,7 @@ protected:
 	float MaxLandingRotation = 25;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
-	float MaxLandingSpeed = 300;
+	float MaxLandingSpeed = 250;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Status")
 	EShipStatus ShipStatus = EShipStatus::Ready;
@@ -91,9 +91,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
-
-	//bool bShipHasLanded = false;
-	//bool bShipHasCrashed = false;
 
 	float LandingRotationThreshold;
 
