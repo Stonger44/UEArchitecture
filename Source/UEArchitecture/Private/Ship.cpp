@@ -47,7 +47,7 @@ void AShip::BeginPlay()
 	LandingRotationThreshold = FMath::Cos(FMath::DegreesToRadians(MaxLandingRotation));
 	UE_LOG(LogTemp, Warning, TEXT("Landing Rotation Threshold: %f"), LandingRotationThreshold);
 
-	ShipStatus = EShipStatus::IsReady;
+	ShipStatus = EShipStatus::Ready;
 }
 
 // Called every frame
@@ -82,9 +82,9 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 
 		// DrawDebugSphere(GetWorld(), ShipMesh->GetCenterOfMass(), 10, 16, FColor::Green, false, -1, 1, .5);
 		
-		if (ShipStatus == EShipStatus::IsReady)
+		if (ShipStatus == EShipStatus::Ready)
 		{
-			ShipStatus = EShipStatus::IsLaunched;
+			ShipStatus = EShipStatus::Launched;
 		}
 	}
 }
@@ -115,7 +115,7 @@ void AShip::NotifyHit
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
-	if (ShipStatus == EShipStatus::IsLaunched)
+	if (ShipStatus == EShipStatus::Launched)
 	{
 		if (Other && Other != this)
 		{
@@ -154,31 +154,9 @@ void AShip::CheckShipLanding(AActor* Other)
 	}
 }
 
-void AShip::ShipReady()
-{
-	ShipStatus = EShipStatus::IsReady;
-	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, Ready!"));
-}
-
-void AShip::ShipLanded()
-{
-	ShipStatus = EShipStatus::IsLanded;
-	UE_LOG(LogTemp, Warning, TEXT("LANDED!!!!"));
-}
-
-void AShip::ShipCrashed()
-{
-	ShipStatus = EShipStatus::IsCrashed;
-	UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
-	UE_LOG(LogTemp, Warning, TEXT("Restarting Level!"));
-
-	TriggerLevelRestart();
-}
-
 bool AShip::IsShipSpeedSafe()
 {
-	FVector ShipVelocity = this->GetVelocity();
-	float shipSpeed = ShipVelocity.Size();
+	float shipSpeed = this->GetVelocity().Length();
 
 	UE_LOG(LogTemp, Warning, TEXT("Ship speed: %f"), shipSpeed);
 	UE_LOG(LogTemp, Warning, TEXT("Max Landing speed: %f"), MaxLandingSpeed);
@@ -200,6 +178,28 @@ bool AShip::IsShipRotationSafe()
 	UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), shipUpAlignment >= LandingRotationThreshold ? TEXT("True") : TEXT("False"));
 
 	return shipUpAlignment >= LandingRotationThreshold;
+}
+
+
+void AShip::ShipReady()
+{
+	ShipStatus = EShipStatus::Ready;
+	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, Ready!"));
+}
+
+void AShip::ShipLanded()
+{
+	ShipStatus = EShipStatus::Landed;
+	UE_LOG(LogTemp, Warning, TEXT("LANDED!!!!"));
+}
+
+void AShip::ShipCrashed()
+{
+	ShipStatus = EShipStatus::Crashed;
+	UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
+	UE_LOG(LogTemp, Warning, TEXT("Restarting Level!"));
+
+	TriggerLevelRestart();
 }
 
 void AShip::TriggerLevelRestart()

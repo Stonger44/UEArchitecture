@@ -44,7 +44,7 @@ void ALandingPad::NotifyHit
 	if (!bShipHasLanded && Other && Other != this && Other->IsA(AShip::StaticClass()))
 	{
 		AShip* Ship = Cast<AShip>(Other);
-		if (Ship && Ship->CurrentShipStatus() == EShipStatus::IsLanded)
+		if (Ship && Ship->CurrentShipStatus() == EShipStatus::Landed)
 		{
 			bShipHasLanded = true;
 			UE_LOG(LogTemp, Warning, TEXT("Starting Next Level!"));
