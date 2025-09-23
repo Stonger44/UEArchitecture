@@ -42,6 +42,9 @@ public:
 
 	EShipStatus CurrentShipStatus() const { return ShipStatus; }
 
+	UFUNCTION(BlueprintCallable)
+	void TriggerShipCrash();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

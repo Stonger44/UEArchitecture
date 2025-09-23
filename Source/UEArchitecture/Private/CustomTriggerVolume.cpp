@@ -55,15 +55,11 @@ void UCustomTriggerVolume::OnBeginOverlap
 	// Check to make sure OtherActor is Ship
 	if (OtherActor && OtherActor != GetOwner() && OtherActor->IsA(AShip::StaticClass()))
 	{
-		// Cast to Ship
 		AShip* Ship = Cast<AShip>(OtherActor);
 		if (Ship)
 		{
-
+			UE_LOG(LogTemp, Error, TEXT("Ship out of bounds!!"));
+			Ship->TriggerShipCrash();
 		}
-		// Trigger AShip::ShipCrashed()
-
-		// Destroy Ship
-		UE_LOG(LogTemp, Error, TEXT("Out of bounds Ship Crash!!"));
 	}
 }

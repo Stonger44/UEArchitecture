@@ -135,6 +135,11 @@ void AShip::NotifyHit
 	}
 }
 
+void AShip::TriggerShipCrash()
+{
+	ShipCrashed();
+}
+
 void AShip::CheckShipLanding(AActor* Other)
 {
 	if (IsShipSpeedSafe() && IsShipRotationSafe())
@@ -198,6 +203,9 @@ void AShip::ShipCrashed()
 	ShipStatus = EShipStatus::Crashed;
 	UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
 	UE_LOG(LogTemp, Warning, TEXT("Restarting Level!"));
+
+	// TODO: Disable Player Input
+	// TODO: Create explosion, smoke/burning effect
 
 	TriggerLevelRestart();
 }
