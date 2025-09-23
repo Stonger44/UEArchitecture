@@ -26,7 +26,7 @@ void UCustomTriggerVolume::BeginPlay()
 		UBoxComponent* BoxComponent = ParentActor->FindComponentByClass<UBoxComponent>();
 		if (BoxComponent)
 		{
-			// BoxComponent->OnComponentBeginOverlap.AddDynamic(this);
+			BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &UCustomTriggerVolume::OnBeginOverlap);
 		}
 	}
 	
@@ -41,3 +41,15 @@ void UCustomTriggerVolume::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
+void UCustomTriggerVolume::OnBeginOverlap
+(
+	UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComponent,
+	int32 OtherBodyIndex,
+	bool bFromSweep,
+	const FHitResult& SweepResult
+)
+{
+
+}
