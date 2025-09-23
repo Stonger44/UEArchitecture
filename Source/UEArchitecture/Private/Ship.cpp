@@ -129,15 +129,15 @@ void AShip::NotifyHit
 			//}
 			else
 			{
-				ShipCrashed();
+				OnShipCrashed();
 			}
 		}
 	}
 }
 
-void AShip::TriggerShipCrash()
+void AShip::Crash()
 {
-	ShipCrashed();
+	OnShipCrashed();
 }
 
 void AShip::CheckShipLanding(AActor* Other)
@@ -146,16 +146,16 @@ void AShip::CheckShipLanding(AActor* Other)
 	{
 		if (ALaunchPad* LaunchPad = Cast<ALaunchPad>(Other))
 		{
-			ShipReady();
+			OnShipReady();
 		}
 		else if (ALandingPad* LandingPad = Cast<ALandingPad>(Other))
 		{
-			ShipLanded();
+			OnShipLanded();
 		}
 	}
 	else
 	{
-		ShipCrashed();
+		OnShipCrashed();
 	}
 }
 
@@ -186,19 +186,19 @@ bool AShip::IsShipRotationSafe()
 }
 
 
-void AShip::ShipReady()
+void AShip::OnShipReady()
 {
 	ShipStatus = EShipStatus::Ready;
 	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, Ready!"));
 }
 
-void AShip::ShipLanded()
+void AShip::OnShipLanded()
 {
 	ShipStatus = EShipStatus::Landed;
 	UE_LOG(LogTemp, Warning, TEXT("LANDED!!!!"));
 }
 
-void AShip::ShipCrashed()
+void AShip::OnShipCrashed()
 {
 	ShipStatus = EShipStatus::Crashed;
 	UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));

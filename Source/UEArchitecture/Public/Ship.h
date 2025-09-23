@@ -43,7 +43,7 @@ public:
 	EShipStatus CurrentShipStatus() const { return ShipStatus; }
 
 	UFUNCTION(BlueprintCallable)
-	void TriggerShipCrash();
+	void Crash();
 
 protected:
 	// Called when the game starts or when spawned
@@ -82,9 +82,9 @@ protected:
 	void CheckShipLanding(AActor* Other);
 	bool IsShipRotationSafe();
 	bool IsShipSpeedSafe();
-	void ShipReady();
-	void ShipLanded();
-	void ShipCrashed();
+	void OnShipReady();
+	void OnShipLanded();
+	void OnShipCrashed();
 	void TriggerLevelRestart();
 	void RestartLevel();
 
