@@ -204,7 +204,7 @@ void AShip::ShipCrashed()
 
 void AShip::TriggerLevelRestart()
 {
-	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &AShip::RestartLevel, 2.0f, false);
+	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &AShip::RestartLevel, 3.0f, false);
 }
 
 void AShip::RestartLevel()

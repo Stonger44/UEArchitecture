@@ -3,6 +3,7 @@
 
 #include "CustomTriggerVolume.h"
 #include "Components/BoxComponent.h"
+#include "Ship.h"
 
 // Sets default values for this component's properties
 UCustomTriggerVolume::UCustomTriggerVolume()
@@ -51,5 +52,18 @@ void UCustomTriggerVolume::OnBeginOverlap
 	const FHitResult& SweepResult
 )
 {
+	// Check to make sure OtherActor is Ship
+	if (OtherActor && OtherActor != GetOwner() && OtherActor->IsA(AShip::StaticClass()))
+	{
+		// Cast to Ship
+		AShip* Ship = Cast<AShip>(OtherActor);
+		if (Ship)
+		{
 
+		}
+		// Trigger AShip::ShipCrashed()
+
+		// Destroy Ship
+		UE_LOG(LogTemp, Error, TEXT("Out of bounds Ship Crash!!"));
+	}
 }
