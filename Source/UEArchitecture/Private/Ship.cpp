@@ -140,6 +140,11 @@ void AShip::Crash()
 	OnShipCrashed();
 }
 
+void AShip::Explode()
+{
+	OnShipExplode();
+}
+
 void AShip::CheckShipLanding(AActor* Other)
 {
 	if (IsShipSpeedSafe() && IsShipRotationSafe())
@@ -207,6 +212,18 @@ void AShip::OnShipCrashed()
 	DisableShipControls();
 
 	// TODO: Create explosion, smoke/burning effect
+
+	TriggerLevelRestart();
+}
+
+void AShip::OnShipExplode()
+{
+	ShipStatus = EShipStatus::Exploded;
+	UE_LOG(LogTemp, Error, TEXT("SHIP HAS EXPLODED!"));
+
+	DisableShipControls();
+	
+	// TODO: Create explosion
 
 	TriggerLevelRestart();
 }

@@ -59,7 +59,7 @@ void UCustomTriggerVolume::OnBeginOverlap
 		if (Ship)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Ship out of bounds!!"));
-			Ship->Crash();
+			Ship->Explode();
 		}
 	}
 }

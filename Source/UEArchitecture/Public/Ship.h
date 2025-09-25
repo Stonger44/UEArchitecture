@@ -44,6 +44,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Crash();
+	void Explode();
 
 protected:
 	// Called when the game starts or when spawned
@@ -82,10 +83,14 @@ protected:
 	void CheckShipLanding(AActor* Other);
 	bool IsShipRotationSafe();
 	bool IsShipSpeedSafe();
+
 	void OnShipReady();
 	void OnShipLanded();
 	void OnShipCrashed();
+	void OnShipExplode();
+
 	void DisableShipControls();
+
 	void TriggerLevelRestart();
 	void RestartLevel();
 

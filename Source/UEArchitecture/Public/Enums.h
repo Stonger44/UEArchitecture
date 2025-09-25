@@ -12,7 +12,8 @@ enum class EShipStatus : uint8
 	Ready		UMETA(DisplayName = "Ready"),
 	Launched	UMETA(DisplayName = "Launched"),
 	Landed		UMETA(DisplayName = "Landed"),
-	Crashed		UMETA(DisplayName = "Crashed")
+	Crashed		UMETA(DisplayName = "Crashed"),
+	Exploded	UMETA(DisplayName = "Exploded")
 };
 
 //UENUM(BlueprintType)
