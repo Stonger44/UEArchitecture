@@ -204,10 +204,20 @@ void AShip::OnShipCrashed()
 	UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
 	UE_LOG(LogTemp, Warning, TEXT("Restarting Level!"));
 
-	// TODO: Disable Player Input
+	DisableShipControls();
+
 	// TODO: Create explosion, smoke/burning effect
 
 	TriggerLevelRestart();
+}
+
+void AShip::DisableShipControls()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		DisableInput(PlayerController);
+	}
 }
 
 void AShip::TriggerLevelRestart()

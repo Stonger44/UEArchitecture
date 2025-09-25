@@ -85,6 +85,7 @@ protected:
 	void OnShipReady();
 	void OnShipLanded();
 	void OnShipCrashed();
+	void DisableShipControls();
 	void TriggerLevelRestart();
 	void RestartLevel();
 
