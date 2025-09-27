@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CustomTriggerVolume.h"
+#include "KillVolume.h"
 #include "Components/BoxComponent.h"
 #include "Ship.h"
 
 // Sets default values for this component's properties
-UCustomTriggerVolume::UCustomTriggerVolume()
+UKillVolume::UKillVolume()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -17,7 +17,7 @@ UCustomTriggerVolume::UCustomTriggerVolume()
 
 
 // Called when the game starts
-void UCustomTriggerVolume::BeginPlay()
+void UKillVolume::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -27,7 +27,7 @@ void UCustomTriggerVolume::BeginPlay()
 		UBoxComponent* BoxComponent = ParentActor->FindComponentByClass<UBoxComponent>();
 		if (BoxComponent)
 		{
-			BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &UCustomTriggerVolume::OnBeginOverlap);
+			BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &UKillVolume::OnBeginOverlap);
 		}
 	}
 	
@@ -35,14 +35,14 @@ void UCustomTriggerVolume::BeginPlay()
 
 
 // Called every frame
-void UCustomTriggerVolume::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UKillVolume::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
 
-void UCustomTriggerVolume::OnBeginOverlap
+void UKillVolume::OnBeginOverlap
 (
 	UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,
