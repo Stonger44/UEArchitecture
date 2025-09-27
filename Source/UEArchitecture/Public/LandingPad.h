@@ -18,6 +18,8 @@
 #include "GameFramework/Actor.h"
 #include "LandingPad.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipLanded);
+
 UCLASS()
 class UEARCHITECTURE_API ALandingPad : public AActor
 {
@@ -42,16 +44,13 @@ public:
 		const FHitResult& Hit
 	) override;
 
+	FOnShipLanded OnShipLanded;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void TriggerNextLevel();
-	void LoadNextLevel();
-
 private:
 	bool bShipHasLanded = false;
-
-	FTimerHandle LevelLoadTimer;
 
 };

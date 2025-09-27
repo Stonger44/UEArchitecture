@@ -13,6 +13,8 @@
 class UInputMappingContext;
 class UInputAction;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipDestroyed);
+
 UCLASS()
 class UEARCHITECTURE_API AShip : public APawn
 {
@@ -42,9 +44,10 @@ public:
 
 	EShipStatus CurrentShipStatus() const { return ShipStatus; }
 
-	UFUNCTION(BlueprintCallable)
-	void Crash();
-	void Explode();
+	FOnShipDestroyed OnShipDestroyed;
+
+	void TriggerCrash();
+	void TriggerExplode();
 
 protected:
 	// Called when the game starts or when spawned
@@ -72,7 +75,7 @@ protected:
 	float MaxLandingRotation = 25;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
-	float MaxLandingSpeed = 250;
+	float MaxLandingSpeed = 300;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Status")
 	EShipStatus ShipStatus = EShipStatus::Ready;
@@ -84,15 +87,12 @@ protected:
 	bool IsShipRotationSafe();
 	bool IsShipSpeedSafe();
 
-	void OnShipReady();
-	void OnShipLanded();
-	void OnShipCrashed();
-	void OnShipExplode();
+	void ShipReady();
+	void ShipLanded();
+	void ShipCrashed();
+	void ShipExploded();
 
 	void DisableShipControls();
-
-	void TriggerLevelRestart();
-	void RestartLevel();
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -102,6 +102,4 @@ private:
 	UCameraComponent* Camera;
 
 	float LandingRotationThreshold;
-
-	FTimerHandle LevelLoadTimer;
 };

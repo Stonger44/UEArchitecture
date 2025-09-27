@@ -129,20 +129,20 @@ void AShip::NotifyHit
 			//}
 			else
 			{
-				OnShipCrashed();
+				ShipCrashed();
 			}
 		}
 	}
 }
 
-void AShip::Crash()
+void AShip::TriggerCrash()
 {
-	OnShipCrashed();
+	ShipCrashed();
 }
 
-void AShip::Explode()
+void AShip::TriggerExplode()
 {
-	OnShipExplode();
+	ShipExploded();
 }
 
 void AShip::CheckShipLanding(AActor* Other)
@@ -151,16 +151,16 @@ void AShip::CheckShipLanding(AActor* Other)
 	{
 		if (ALaunchPad* LaunchPad = Cast<ALaunchPad>(Other))
 		{
-			OnShipReady();
+			ShipReady();
 		}
 		else if (ALandingPad* LandingPad = Cast<ALandingPad>(Other))
 		{
-			OnShipLanded();
+			ShipLanded();
 		}
 	}
 	else
 	{
-		OnShipCrashed();
+		ShipCrashed();
 	}
 }
 
@@ -191,32 +191,31 @@ bool AShip::IsShipRotationSafe()
 }
 
 
-void AShip::OnShipReady()
+void AShip::ShipReady()
 {
 	ShipStatus = EShipStatus::Ready;
 	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, Ready!"));
 }
 
-void AShip::OnShipLanded()
+void AShip::ShipLanded()
 {
 	ShipStatus = EShipStatus::Landed;
-	UE_LOG(LogTemp, Warning, TEXT("LANDED!!!!"));
+	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
 }
 
-void AShip::OnShipCrashed()
+void AShip::ShipCrashed()
 {
 	ShipStatus = EShipStatus::Crashed;
-	UE_LOG(LogTemp, Warning, TEXT("CRAAAASH!!!!"));
-	UE_LOG(LogTemp, Warning, TEXT("Restarting Level!"));
+	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS CRASHED!!!!"));
 
 	DisableShipControls();
 
 	// TODO: Create explosion, smoke/burning effect
 
-	TriggerLevelRestart();
+	OnShipDestroyed.Broadcast();
 }
 
-void AShip::OnShipExplode()
+void AShip::ShipExploded()
 {
 	ShipStatus = EShipStatus::Exploded;
 	UE_LOG(LogTemp, Error, TEXT("SHIP HAS EXPLODED!"));
@@ -225,7 +224,7 @@ void AShip::OnShipExplode()
 	
 	// TODO: Create explosion
 
-	TriggerLevelRestart();
+	OnShipDestroyed.Broadcast();
 }
 
 void AShip::DisableShipControls()
@@ -235,16 +234,4 @@ void AShip::DisableShipControls()
 	{
 		DisableInput(PlayerController);
 	}
-}
-
-void AShip::TriggerLevelRestart()
-{
-	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &AShip::RestartLevel, 3.0f, false);
-}
-
-void AShip::RestartLevel()
-{
-	// Restart Level
-	FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-	UGameplayStatics::OpenLevel(this, CurrentlevelName, false);
 }

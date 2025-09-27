@@ -47,20 +47,8 @@ void ALandingPad::NotifyHit
 		if (Ship && Ship->CurrentShipStatus() == EShipStatus::Landed)
 		{
 			bShipHasLanded = true;
-			UE_LOG(LogTemp, Warning, TEXT("Starting Next Level!"));
-			TriggerNextLevel();
+
+			OnShipLanded.Broadcast();
 		}
 	}
-}
-
-void ALandingPad::TriggerNextLevel()
-{
-	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &ALandingPad::LoadNextLevel, 3.0f, false);
-}
-
-void ALandingPad::LoadNextLevel()
-{
-	// Restart Level
-	FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-	UGameplayStatics::OpenLevel(this, CurrentlevelName, false);
 }
