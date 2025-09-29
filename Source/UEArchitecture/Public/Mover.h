@@ -30,14 +30,15 @@ protected:
 	FVector LocalPositionB;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mover")
-	float MoveSpeed = 10;
+	float MovementSpeed = 1000;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mover")
-	bool bIsMovingToB;
+	bool bIsMovingToB = true;
+
+	void Move(float DeltaTime);
 
 private:	
 	FVector WorldPositionA;
 	FVector WorldPositionB;
-	
-		
+
 };

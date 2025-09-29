@@ -21,10 +21,9 @@ void UKillVolume::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AActor* ParentActor = GetOwner();
-	if (ParentActor)
+	if (AActor* Owner = GetOwner())
 	{
-		UBoxComponent* BoxComponent = ParentActor->FindComponentByClass<UBoxComponent>();
+		UBoxComponent* BoxComponent = Owner->FindComponentByClass<UBoxComponent>();
 		if (BoxComponent)
 		{
 			BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &UKillVolume::OnBeginOverlap);
