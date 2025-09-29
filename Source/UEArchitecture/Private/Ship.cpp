@@ -201,6 +201,8 @@ void AShip::ShipLanded()
 {
 	ShipStatus = EShipStatus::Landed;
 	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
+
+	DisableShipControls();
 }
 
 void AShip::ShipCrashed()

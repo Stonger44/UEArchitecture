@@ -22,6 +22,9 @@ void UMover::BeginPlay()
 
 	if (AActor* Owner = GetOwner())
 	{
+		USceneComponent* OwnerRoot = Owner->GetRootComponent();
+		OwnerRoot->SetMobility(EComponentMobility::Movable);
+
 		WorldPositionA = Owner->GetTransform().TransformPosition(LocalPositionA);
 		WorldPositionB = Owner->GetTransform().TransformPosition(LocalPositionB);
 	}
