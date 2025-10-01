@@ -72,6 +72,11 @@ void AShip::CheckFuel(float DeltaTime)
 			bIsThrusting = false;
 		}
 	}
+
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(1, INDEFINITELY_LOOPING_DURATION, FColor::Green, FString::Printf(TEXT("Fuel: %f"), Fuel));
+	//}
 }
 
 // Called to bind functionality to input
