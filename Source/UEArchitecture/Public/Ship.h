@@ -80,11 +80,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Status")
 	EShipStatus ShipStatus = EShipStatus::Ready;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Status")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
 	float MaxFuel = 100;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Status")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
 	float Fuel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
+	float FuelDrainRate = 5;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
+	bool bIsThrusting = false;
 
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
@@ -99,6 +105,8 @@ protected:
 	void ShipExploded();
 
 	void DisableShipControls();
+
+	void CheckFuel(float DelaTime);
 
 private:
 	UPROPERTY(VisibleAnywhere)

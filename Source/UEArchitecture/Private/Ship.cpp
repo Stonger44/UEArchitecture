@@ -57,6 +57,21 @@ void AShip::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	CheckFuel(DeltaTime);
+}
+
+void AShip::CheckFuel(float DeltaTime)
+{
+	if (bIsThrusting)
+	{
+		Fuel -= FuelDrainRate * DeltaTime;
+
+		if (Fuel <= 0)
+		{
+			Fuel = 0;
+			bIsThrusting = false;
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -66,8 +81,11 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		// Bind Actions to Functions
+		// Bind Thrust Actions to Function
 		EnhancedInputComponent->BindAction(ThrustAction, ETriggerEvent::Triggered, this, &AShip::Thrust);
+		EnhancedInputComponent->BindAction(ThrustAction, ETriggerEvent::Completed, this, &AShip::Thrust);
+
+		//Bind Rotate Actions to Function
 		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AShip::Rotate);
 	}
 
@@ -75,8 +93,16 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AShip::Thrust(const FInputActionValue& InputValue)
 {
-	if (bool currentValue = InputValue.Get<bool>())
+	bIsThrusting = InputValue.Get<bool>();
+	// UE_LOG(LogTemp, Warning, TEXT("IsThrusting: %s"), InputValue.Get<bool>() ? TEXT("true") : TEXT("false"))
+
+	if (bIsThrusting && Fuel > 0)
 	{
+		if (ShipStatus == EShipStatus::Ready)
+		{
+			ShipStatus = EShipStatus::Launched;
+		}
+
 		const FVector thrust = GetActorUpVector() * ThrustStrength;
 		// UE_LOG(LogTemp, Warning, TEXT("GetActorUpVector Impulse: %s"), *thrust.ToString());
 
@@ -84,10 +110,8 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 
 		// DrawDebugSphere(GetWorld(), ShipMesh->GetCenterOfMass(), 10, 16, FColor::Green, false, -1, 1, .5);
 		
-		if (ShipStatus == EShipStatus::Ready)
-		{
-			ShipStatus = EShipStatus::Launched;
-		}
+		// Drain Fuel by FuelDrainRate
+
 	}
 }
 
