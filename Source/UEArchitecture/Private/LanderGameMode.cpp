@@ -6,6 +6,13 @@
 #include "LandingPad.h"
 #include "Kismet/GameplayStatics.h"
 
+ALanderGameMode::ALanderGameMode()
+{
+	PrimaryActorTick.bCanEverTick = true;
+
+
+}
+
 void ALanderGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -33,6 +40,12 @@ void ALanderGameMode::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No LandingPad found in level!"));
 	}
+}
+
+void ALanderGameMode::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
 }
 
 void ALanderGameMode::HandleShipDestroyed()

@@ -48,6 +48,8 @@ void AShip::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Landing Rotation Threshold: %f"), LandingRotationThreshold);
 
 	ShipStatus = EShipStatus::Ready;
+
+	Fuel = MaxFuel;
 }
 
 // Called every frame

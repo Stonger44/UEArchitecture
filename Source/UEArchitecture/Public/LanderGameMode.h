@@ -12,22 +12,24 @@ class UEARCHITECTURE_API ALanderGameMode : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+	ALanderGameMode();
+
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
 
 	void RestartCurrentLevel();
 
 	void LoadNextLevel();
 
 protected:
-
-
-private:
 	UFUNCTION()
 	void HandleShipDestroyed();
 
 	UFUNCTION()
 	void HandleShipLanded();
 
+private:
 	FTimerHandle LevelLoadTimer;
 
 };

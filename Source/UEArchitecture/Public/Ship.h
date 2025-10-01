@@ -80,6 +80,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Status")
 	EShipStatus ShipStatus = EShipStatus::Ready;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Status")
+	float MaxFuel = 100;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Status")
+	float Fuel;
+
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
 
