@@ -10,7 +10,16 @@ ALanderGameMode::ALanderGameMode()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableAsset(TEXT("/Script/Engine.DataTable'/Game/DataTables/LevelData.LevelData'"));
 
+	if (DataTableAsset.Succeeded())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DataTable found!"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("DataTable NOT found!"));
+	}
 }
 
 void ALanderGameMode::BeginPlay()

@@ -23,6 +23,9 @@ public:
 	void LoadNextLevel();
 
 protected:
+	UPROPERTY()
+	UDataTable* LevelDataTable;
+
 	UFUNCTION()
 	void HandleShipDestroyed();
 
