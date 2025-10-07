@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Engine/DataTable.h"
+#include "UObject/ConstructorHelpers.h"
 #include "LanderGameMode.generated.h"
 
 UCLASS()
@@ -18,8 +20,11 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	void RestartCurrentLevel();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Level")
+	float MaxFuel;
+
+	void RestartCurrentLevel();
 	void LoadNextLevel();
 
 protected:
@@ -35,4 +40,5 @@ protected:
 private:
 	FTimerHandle LevelLoadTimer;
 
+	float Fuel;
 };

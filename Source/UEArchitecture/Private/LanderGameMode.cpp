@@ -4,6 +4,7 @@
 #include "LanderGameMode.h"
 #include "Ship.h"
 #include "LandingPad.h"
+#include "Data/LevelData.h"
 #include "Kismet/GameplayStatics.h"
 
 ALanderGameMode::ALanderGameMode()
@@ -15,6 +16,8 @@ ALanderGameMode::ALanderGameMode()
 	if (DataTableAsset.Succeeded())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DataTable found!"));
+
+		LevelDataTable = DataTableAsset.Object;
 	}
 	else
 	{
@@ -25,6 +28,18 @@ ALanderGameMode::ALanderGameMode()
 void ALanderGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (LevelDataTable != nullptr)
+	{
+		FName LevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+		static const FString ContextString(TEXT("GetLevel"));
+		const FLevelData* Row = LevelDataTable->FindRow<FLevelData>(LevelName, ContextString, true);
+
+		if (Row != nullptr)
+		{
+			MaxFuel = Row->MaxFuel;
+		}
+	}
 
 	AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
 	AShip* Ship = Cast<AShip>(ShipActor);
