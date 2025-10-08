@@ -4,6 +4,7 @@
 #include "Ship.h"
 #include "LandingPad.h"
 #include "LaunchPad.h"
+#include "LanderGameMode.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
@@ -49,7 +50,19 @@ void AShip::BeginPlay()
 
 	ShipStatus = EShipStatus::Ready;
 
+	ALanderGameMode* LanderGM = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
+	if (LanderGM)
+	{
+		MaxFuel = LanderGM->MaxFuel;
+		//MaxFuel = LanderGM->GetMaxFuel();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Ship.cpp: LanderGameMode NOT FOUND!!"))
+	}
+
 	Fuel = MaxFuel;
+
 }
 
 // Called every frame
@@ -242,7 +255,7 @@ void AShip::ShipCrashed()
 	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS CRASHED!!!!"));
 
 	DisableShipControls();
-
+	bIsThrusting = false;
 	// TODO: Create explosion, smoke/burning effect
 
 	OnShipDestroyed.Broadcast();

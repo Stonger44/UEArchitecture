@@ -37,7 +37,8 @@ void ALanderGameMode::BeginPlay()
 
 		if (Row != nullptr)
 		{
-			MaxFuel = Row->MaxFuel;
+			_maxFuel = Row->MaxFuel;
+			MaxFuel = _maxFuel;
 		}
 	}
 
