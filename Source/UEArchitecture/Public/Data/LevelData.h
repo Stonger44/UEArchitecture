@@ -9,6 +9,9 @@ struct FLevelData : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LevelID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName LevelName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

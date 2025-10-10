@@ -86,10 +86,10 @@ void AShip::CheckFuel(float DeltaTime)
 		}
 	}
 
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(1, INDEFINITELY_LOOPING_DURATION, FColor::Green, FString::Printf(TEXT("Fuel: %f"), Fuel));
-	//}
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(1, INDEFINITELY_LOOPING_DURATION, FColor::Green, FString::Printf(TEXT("Fuel: %f"), Fuel));
+	}
 }
 
 // Called to bind functionality to input
@@ -127,8 +127,6 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 		ShipMesh->AddForce(thrust, NAME_None, true);
 
 		// DrawDebugSphere(GetWorld(), ShipMesh->GetCenterOfMass(), 10, 16, FColor::Green, false, -1, 1, .5);
-		
-		// Drain Fuel by FuelDrainRate
 
 	}
 }

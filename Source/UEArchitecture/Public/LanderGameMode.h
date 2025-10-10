@@ -43,4 +43,6 @@ private:
 	FTimerHandle LevelLoadTimer;
 
 	float _maxFuel;
+
+	int32 GetCurrentLevelID() const;
 };
