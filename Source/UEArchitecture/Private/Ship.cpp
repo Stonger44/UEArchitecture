@@ -236,7 +236,7 @@ bool AShip::IsShipRotationSafe()
 void AShip::ShipReady()
 {
 	ShipStatus = EShipStatus::Ready;
-	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, Ready!"));
+	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, READY!"));
 }
 
 void AShip::ShipLanded()
