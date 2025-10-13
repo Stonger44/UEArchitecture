@@ -31,9 +31,9 @@ void ALanderGameMode::BeginPlay()
 
 	if (LevelDataTable != nullptr)
 	{
-		FName LevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+		FName RowName = TEXT("00");
 		static const FString ContextString(TEXT("GetLevel"));
-		const FLevelData* Row = LevelDataTable->FindRow<FLevelData>("00", ContextString, true);
+		const FLevelData* Row = LevelDataTable->FindRow<FLevelData>(RowName, ContextString, true);
 
 		if (Row != nullptr)
 		{
@@ -104,18 +104,15 @@ void ALanderGameMode::LoadNextLevel()
 
 int32 ALanderGameMode::GetCurrentLevelID() const
 {
-	const FLevelData* Row = LevelDataTable->FindRow<FLevelData>("00", "GetCurrentLevelID", true);
-
-	int32 currentLevelID;
-
-	if (Row != nullptr)
+	FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
+	for (auto iterator : LevelDataTable->GetRowMap())
 	{
-		currentLevelID = Row->LevelID;
+		const FLevelData* Row = reinterpret_cast<const FLevelData*>(iterator.Value);
+		if (Row && Row->LevelName == CurrentLevelName)
+		{
+			return Row->LevelID;
+		}
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Could not get CurrentLevelID."));
-	}
-
-	return currentLevelID;
+	
+	return -1;
 }
