@@ -37,11 +37,11 @@ void ALanderGameMode::BeginPlay()
 
 		if (Row != nullptr)
 		{
-			_maxFuel = Row->MaxFuel;
-			MaxFuel = _maxFuel;
+			MaxFuel = Row->MaxFuel;
 		}
 	}
 
+	// Subscribe to ShipDestroyed Event
 	AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
 	AShip* Ship = Cast<AShip>(ShipActor);
 
@@ -54,6 +54,8 @@ void ALanderGameMode::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
 	}
 
+
+	// Subscribe to ShipLanded Event
 	AActor* LandingPadActor = UGameplayStatics::GetActorOfClass(GetWorld(), ALandingPad::StaticClass());
 	ALandingPad* LandingPad = Cast<ALandingPad>(LandingPadActor);
 
@@ -73,50 +75,6 @@ void ALanderGameMode::Tick(float DeltaTime)
 
 }
 
-void ALanderGameMode::HandleShipDestroyed()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Ship has been destroyed! Restarting level..."));
-
-	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::RestartCurrentLevel, 3.0f, false);
-}
-
-void ALanderGameMode::RestartCurrentLevel()
-{
-	// Restart Level
-	FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-	UGameplayStatics::OpenLevel(this, CurrentlevelName, false);
-}
-
-void ALanderGameMode::HandleShipLanded()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Ship has landed! Loading next level..."));
-
-	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::LoadNextLevel, 3.0f, false);
-}
-
-void ALanderGameMode::LoadNextLevel()
-{
-	int32 LevelID = GetCurrentLevelID();
-	
-	if (LevelID < 0)
-	{
-		return;
-	}
-
-	// Have Valid LevelID
-	int32 NextLevelID;
-	NextLevelID = LevelID + 1;
-
-	for (auto& i : LevelDataTable->GetRowMap())
-	{
-		const FLevelData* Row = reinterpret_cast<const FLevelData*>(i.Value);
-		if (Row && Row->LevelID == NextLevelID)
-		{
-			UGameplayStatics::OpenLevel(this, Row->LevelName, false);
-		}
-	}
-}
-
 int32 ALanderGameMode::GetCurrentLevelID() const
 {
 	FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
@@ -128,6 +86,54 @@ int32 ALanderGameMode::GetCurrentLevelID() const
 			return Row->LevelID;
 		}
 	}
-	
+
 	return -1;
+}
+
+void ALanderGameMode::HandleShipDestroyed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Ship has been destroyed! Restarting level..."));
+
+	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::RestartCurrentLevel, 3.0f, false);
+}
+
+void ALanderGameMode::HandleShipLanded()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Ship has landed! Loading next level..."));
+
+	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::LoadNextLevel, 3.0f, false);
+}
+
+void ALanderGameMode::RestartCurrentLevel()
+{
+	// Restart Level
+	FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+	UGameplayStatics::OpenLevel(this, CurrentlevelName);
+}
+
+void ALanderGameMode::LoadNextLevel()
+{
+	int32 CurrentLevelID = GetCurrentLevelID();
+	
+	if (CurrentLevelID < 0)
+	{
+		return;
+	}
+
+	// Have Valid LevelID
+	int32 NextLevelID = CurrentLevelID + 1;
+
+	for (auto& i : LevelDataTable->GetRowMap())
+	{
+		const FLevelData* Row = reinterpret_cast<const FLevelData*>(i.Value);
+		if (Row && Row->LevelID == NextLevelID)
+		{
+			UGameplayStatics::OpenLevel(this, Row->LevelName);
+
+			return;
+		}
+	}
+
+	// Last Level completed, no other Levels
+	UE_LOG(LogTemp, Warning, TEXT("Congratulations! You've beaten the game!"))
 }

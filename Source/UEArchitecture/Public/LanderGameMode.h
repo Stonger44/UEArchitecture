@@ -20,14 +20,11 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
-	float MaxFuel;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
+	//float MaxFuel;
 
-	//UFUNCTION(BlueprintCallable, Category = "Level")
-	//float GetMaxFuel() const { return MaxFuel; }
-
-	void RestartCurrentLevel();
-	void LoadNextLevel();
+	UFUNCTION(BlueprintCallable, Category = "Level")
+	float GetMaxFuel() const { return MaxFuel; }
 
 protected:
 	UPROPERTY()
@@ -39,10 +36,16 @@ protected:
 	UFUNCTION()
 	void HandleShipLanded();
 
+	UFUNCTION()
+	void RestartCurrentLevel();
+
+	UFUNCTION()
+	void LoadNextLevel();
+
 private:
 	FTimerHandle LevelLoadTimer;
 
-	float _maxFuel;
+	float MaxFuel;
 
 	int32 GetCurrentLevelID() const;
 };

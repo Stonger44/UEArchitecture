@@ -53,8 +53,8 @@ void AShip::BeginPlay()
 	ALanderGameMode* LanderGM = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
 	if (LanderGM)
 	{
-		MaxFuel = LanderGM->MaxFuel;
-		//MaxFuel = LanderGM->GetMaxFuel();
+		// MaxFuel = LanderGM->MaxFuel;
+		MaxFuel = LanderGM->GetMaxFuel();
 	}
 	else
 	{
@@ -177,16 +177,6 @@ void AShip::NotifyHit
 	}
 }
 
-void AShip::TriggerCrash()
-{
-	ShipCrashed();
-}
-
-void AShip::TriggerExplode()
-{
-	ShipExploded();
-}
-
 void AShip::CheckShipLanding(AActor* Other)
 {
 	if (IsShipSpeedSafe() && IsShipRotationSafe())
@@ -232,6 +222,15 @@ bool AShip::IsShipRotationSafe()
 	return shipUpAlignment >= LandingRotationThreshold;
 }
 
+void AShip::TriggerCrash()
+{
+	ShipCrashed();
+}
+
+void AShip::TriggerExplode()
+{
+	ShipExploded();
+}
 
 void AShip::ShipReady()
 {
