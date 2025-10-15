@@ -19,6 +19,10 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
 	UFUNCTION()
 	void OnBeginOverlap(
 		UPrimitiveComponent* OverlappedComponent,
@@ -27,10 +31,6 @@ public:
 		int32 OtherBodyIndex,
 		bool bFromSweep,
 		const FHitResult& SweepResult);
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
 
 private:
 
