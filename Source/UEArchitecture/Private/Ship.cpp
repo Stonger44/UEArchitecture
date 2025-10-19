@@ -165,10 +165,6 @@ void AShip::NotifyHit
 			{
 				CheckShipLanding(Other);
 			}
-			//else if (false)
-			//{
-			//	// Placeholder for fuel pickups
-			//}
 			else
 			{
 				ShipCrashed();
