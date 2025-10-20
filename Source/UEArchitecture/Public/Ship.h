@@ -46,9 +46,13 @@ public:
 
 	FOnShipDestroyed OnShipDestroyed;
 
+	UFUNCTION()
 	void TriggerCrash();
+	
+	UFUNCTION()
 	void TriggerExplode();
 
+	UFUNCTION()
 	void AddFuel(float FuelToAdd);
 
 protected:
