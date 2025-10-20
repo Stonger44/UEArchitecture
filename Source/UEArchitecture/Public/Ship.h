@@ -49,6 +49,8 @@ public:
 	void TriggerCrash();
 	void TriggerExplode();
 
+	void AddFuel(float FuelToAdd);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -106,7 +108,7 @@ protected:
 
 	void DisableShipControls();
 
-	void CheckFuel(float DelaTime);
+	void CheckFuel(float DeltaTime);
 
 private:
 	UPROPERTY(VisibleAnywhere)

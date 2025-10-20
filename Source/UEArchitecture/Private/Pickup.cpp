@@ -13,13 +13,14 @@ APickup::APickup()
 	PickupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickupMesh"));
 	SetRootComponent(PickupMesh);
 
+	PickupMesh->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 }
 
 // Called when the game starts or when spawned
 void APickup::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	PickupMesh->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnBeginOverlap);
 }
 
@@ -42,7 +43,14 @@ void APickup::OnBeginOverlap
 {
 	if (OtherActor && OtherActor->IsA(AShip::StaticClass()))
 	{
-		CollectPickup();
+		if (AShip* Ship = Cast<AShip>(OtherActor))
+		{
+			CollectPickup(Ship);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Pickup: Ship cast failed!"));
+		}
 	}
 	else
 	{
@@ -50,8 +58,14 @@ void APickup::OnBeginOverlap
 	}
 }
 
-void APickup::CollectPickup()
+void APickup::CollectPickup(AShip* Ship)
 {
+	Ship->AddFuel(PickupValue);
 	UE_LOG(LogTemp, Warning, TEXT("Ship has collected a Pickup!!"));
+
+	// Destroy Pickup
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+	Destroy();
 }
 

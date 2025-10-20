@@ -22,7 +22,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickup | Graphics")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* PickupMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pickup | Value")
@@ -40,7 +40,7 @@ protected:
 	);
 
 	UFUNCTION()
-	void CollectPickup();
+	void CollectPickup(AShip* Ship);
 
 private:	
 	

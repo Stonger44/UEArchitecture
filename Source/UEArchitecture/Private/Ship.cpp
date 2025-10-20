@@ -73,6 +73,11 @@ void AShip::Tick(float DeltaTime)
 	CheckFuel(DeltaTime);
 }
 
+void AShip::AddFuel(float FuelToAdd)
+{
+	Fuel = FMath::Clamp(Fuel + FuelToAdd, 0, MaxFuel);
+}
+
 void AShip::CheckFuel(float DeltaTime)
 {
 	if (bIsThrusting)
@@ -88,7 +93,7 @@ void AShip::CheckFuel(float DeltaTime)
 
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(1, INDEFINITELY_LOOPING_DURATION, FColor::Green, FString::Printf(TEXT("Fuel: %f"), Fuel));
+		GEngine->AddOnScreenDebugMessage(1, INDEFINITELY_LOOPING_DURATION, FColor::Green, FString::Printf(TEXT("Fuel: %.2f / %.2f"), Fuel, MaxFuel));
 	}
 }
 
