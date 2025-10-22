@@ -29,6 +29,11 @@ public:
 	// Sets default values for this actor's properties
 	ALandingPad();
 
+	//UPROPERTY(EditAnywhere, Category = "FX")
+	//{
+
+	//}
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
