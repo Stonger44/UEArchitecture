@@ -16,6 +16,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraComponent.h"
 #include "LandingPad.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipLanded);
@@ -29,10 +30,8 @@ public:
 	// Sets default values for this actor's properties
 	ALandingPad();
 
-	//UPROPERTY(EditAnywhere, Category = "FX")
-	//{
-
-	//}
+	UPROPERTY(EditAnywhere, Category = "FX")
+	UNiagaraSystem* CelebrationEffect;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
