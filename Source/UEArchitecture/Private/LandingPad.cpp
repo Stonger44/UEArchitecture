@@ -3,6 +3,7 @@
 
 #include "LandingPad.h"
 #include "Ship.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -49,6 +50,12 @@ void ALandingPad::NotifyHit
 			bShipHasLanded = true;
 
 			OnShipLanded.Broadcast();
+
+			if (CelebrationEffect)
+			{
+				FVector EffectLocation = GetActorLocation();
+				CelebrationEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), CelebrationEffect, EffectLocation, GetActorRotation());
+			}
 		}
 	}
 }

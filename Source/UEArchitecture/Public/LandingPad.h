@@ -57,4 +57,6 @@ protected:
 private:
 	bool bShipHasLanded = false;
 
+	UPROPERTY()
+	UNiagaraComponent* CelebrationEffectComponent;
 };
