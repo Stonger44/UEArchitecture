@@ -245,6 +245,7 @@ void AShip::ShipLanded()
 	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
 
 	DisableShipControls();
+	bIsThrusting = false;
 }
 
 void AShip::ShipCrashed()
@@ -254,6 +255,7 @@ void AShip::ShipCrashed()
 
 	DisableShipControls();
 	bIsThrusting = false;
+
 	// TODO: Create explosion, smoke/burning effect
 
 	OnShipDestroyed.Broadcast();
@@ -265,7 +267,8 @@ void AShip::ShipExploded()
 	UE_LOG(LogTemp, Error, TEXT("SHIP HAS EXPLODED!"));
 
 	DisableShipControls();
-	
+	bIsThrusting = false;
+
 	// TODO: Create explosion
 
 	OnShipDestroyed.Broadcast();

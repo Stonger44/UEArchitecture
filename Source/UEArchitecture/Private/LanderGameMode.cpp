@@ -23,6 +23,8 @@ ALanderGameMode::ALanderGameMode()
 	{
 		UE_LOG(LogTemp, Error, TEXT("DataTable NOT found!"));
 	}
+
+	DefaultPawnClass = AShip::StaticClass();
 }
 
 void ALanderGameMode::BeginPlay()
@@ -66,6 +68,22 @@ void ALanderGameMode::BeginPlay()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No LandingPad found in level!"));
+	}
+
+	APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController)
+	{
+		FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
+		if (CurrentLevelName == "MainMenu")
+		{
+			PlayerController->bShowMouseCursor = true;
+			PlayerController->SetInputMode(FInputModeUIOnly());
+		}
+		else
+		{
+			PlayerController->bShowMouseCursor = false;
+			PlayerController->SetInputMode(FInputModeGameOnly());
+		}
 	}
 }
 
