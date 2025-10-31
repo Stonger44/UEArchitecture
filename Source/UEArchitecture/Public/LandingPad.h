@@ -48,6 +48,7 @@ public:
 		const FHitResult& Hit
 	) override;
 
+	UPROPERTY()
 	FOnShipLanded OnShipLanded;
 
 protected:

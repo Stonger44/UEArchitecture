@@ -44,6 +44,7 @@ public:
 
 	EShipStatus CurrentShipStatus() const { return ShipStatus; }
 
+	UPROPERTY()
 	FOnShipDestroyed OnShipDestroyed;
 
 	UFUNCTION()

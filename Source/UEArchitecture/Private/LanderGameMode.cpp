@@ -31,6 +31,7 @@ void ALanderGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Load Level Data
 	if (LevelDataTable != nullptr)
 	{
 		FName RowName = FName(*FString::FromInt(GetCurrentLevelID()));
@@ -45,8 +46,7 @@ void ALanderGameMode::BeginPlay()
 
 	// Subscribe to ShipDestroyed Event
 	AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
-	AShip* Ship = Cast<AShip>(ShipActor);
-
+	Ship = Cast<AShip>(ShipActor);
 	if (Ship)
 	{
 		Ship->OnShipDestroyed.AddDynamic(this, &ALanderGameMode::HandleShipDestroyed);
@@ -56,11 +56,9 @@ void ALanderGameMode::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
 	}
 
-
 	// Subscribe to ShipLanded Event
 	AActor* LandingPadActor = UGameplayStatics::GetActorOfClass(GetWorld(), ALandingPad::StaticClass());
-	ALandingPad* LandingPad = Cast<ALandingPad>(LandingPadActor);
-
+	LandingPad = Cast<ALandingPad>(LandingPadActor);
 	if (LandingPad)
 	{
 		LandingPad->OnShipLanded.AddDynamic(this, &ALanderGameMode::HandleShipLanded);
@@ -70,6 +68,7 @@ void ALanderGameMode::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No LandingPad found in level!"));
 	}
 
+	// Enable only UI controls on MainMenu Level
 	APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	if (PlayerController)
 	{
@@ -84,6 +83,31 @@ void ALanderGameMode::BeginPlay()
 			PlayerController->bShowMouseCursor = false;
 			PlayerController->SetInputMode(FInputModeGameOnly());
 		}
+	}
+}
+
+void ALanderGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	// Unsubscribe from ShipDestroyed Event
+	if (Ship)
+	{
+		Ship->OnShipDestroyed.RemoveDynamic(this, &ALanderGameMode::HandleShipDestroyed);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
+	}
+
+	// Unsubscribe from ShipLanded Event
+	if (LandingPad)
+	{
+		LandingPad->OnShipLanded.RemoveDynamic(this, &ALanderGameMode::HandleShipLanded);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No LandingPad found in level!"));
 	}
 }
 
@@ -124,7 +148,6 @@ void ALanderGameMode::HandleShipLanded()
 
 void ALanderGameMode::RestartCurrentLevel()
 {
-	// Restart Level
 	FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
 	UGameplayStatics::OpenLevel(this, CurrentlevelName);
 }

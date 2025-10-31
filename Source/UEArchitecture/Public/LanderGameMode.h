@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "Engine/DataTable.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Ship.h"
+#include "LandingPad.h"
 #include "LanderGameMode.generated.h"
 
 UCLASS()
@@ -17,6 +19,8 @@ public:
 	ALanderGameMode();
 
 	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -44,6 +48,12 @@ protected:
 
 private:
 	FTimerHandle LevelLoadTimer;
+
+	UPROPERTY()
+	AShip* Ship;
+
+	UPROPERTY()
+	ALandingPad* LandingPad;
 
 	float MaxFuel;
 
