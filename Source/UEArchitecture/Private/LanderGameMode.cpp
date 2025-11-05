@@ -44,7 +44,7 @@ void ALanderGameMode::BeginPlay()
 		}
 	}
 
-	// Subscribe to ShipDestroyed Event
+	// Subscribe to OnShipDestroyed Event
 	AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
 	Ship = Cast<AShip>(ShipActor);
 	if (Ship)
@@ -56,7 +56,7 @@ void ALanderGameMode::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
 	}
 
-	// Subscribe to ShipLanded Event
+	// Subscribe to OnShipLanded Event
 	AActor* LandingPadActor = UGameplayStatics::GetActorOfClass(GetWorld(), ALandingPad::StaticClass());
 	LandingPad = Cast<ALandingPad>(LandingPadActor);
 	if (LandingPad)
@@ -90,7 +90,7 @@ void ALanderGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	// Unsubscribe from ShipDestroyed Event
+	// Unsubscribe from OnShipDestroyed Event
 	if (Ship)
 	{
 		Ship->OnShipDestroyed.RemoveDynamic(this, &ALanderGameMode::HandleShipDestroyed);
@@ -100,7 +100,7 @@ void ALanderGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
 	}
 
-	// Unsubscribe from ShipLanded Event
+	// Unsubscribe from OnShipLanded Event
 	if (LandingPad)
 	{
 		LandingPad->OnShipLanded.RemoveDynamic(this, &ALanderGameMode::HandleShipLanded);
