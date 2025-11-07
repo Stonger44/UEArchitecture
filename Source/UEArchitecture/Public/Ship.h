@@ -63,6 +63,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Graphics")
 	UStaticMeshComponent* ShipMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Graphics")
+	UStaticMeshComponent* VisualMesh;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
 	float ThrustStrength = 3000;
 

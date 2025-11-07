@@ -15,8 +15,14 @@ AShip::AShip()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
+
 	ShipMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
 	SetRootComponent(ShipMesh);
+
+	// VisualMesh exists because the StaticMesh for the Ship asset was rotated by 90 degrees
+	VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualMesh"));
+	VisualMesh->SetupAttachment(ShipMesh);
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(ShipMesh);
