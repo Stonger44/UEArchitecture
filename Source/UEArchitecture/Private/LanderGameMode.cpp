@@ -6,6 +6,7 @@
 #include "LandingPad.h"
 #include "Data/LevelData.h"
 #include "Kismet/GameplayStatics.h"
+#include "Camera/CameraActor.h"
 
 ALanderGameMode::ALanderGameMode()
 {
@@ -24,7 +25,15 @@ ALanderGameMode::ALanderGameMode()
 		UE_LOG(LogTemp, Error, TEXT("DataTable NOT found!"));
 	}
 
-	DefaultPawnClass = AShip::StaticClass();
+	FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
+	if (CurrentLevelName == "MainMenu")
+	{
+		DefaultPawnClass = nullptr;
+	}
+	else
+	{
+		DefaultPawnClass = AShip::StaticClass();
+	}
 }
 
 void ALanderGameMode::BeginPlay()
@@ -75,6 +84,13 @@ void ALanderGameMode::BeginPlay()
 		FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
 		if (CurrentLevelName == "MainMenu")
 		{
+			AActor* Camera = UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass());
+
+			if (Camera)
+			{
+				PlayerController->SetViewTargetWithBlend(Camera, 0.f);
+			}
+
 			PlayerController->bShowMouseCursor = true;
 			PlayerController->SetInputMode(FInputModeUIOnly());
 		}
