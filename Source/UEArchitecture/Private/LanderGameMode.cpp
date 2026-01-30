@@ -53,16 +53,22 @@ void ALanderGameMode::BeginPlay()
 		}
 	}
 
-	// Subscribe to OnShipDestroyed Event
-	AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
-	Ship = Cast<AShip>(ShipActor);
-	if (Ship)
+	FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
+
+	// No player ship in MainMenu, just a static mesh
+	if (CurrentLevelName != "MainMenu")
 	{
-		Ship->OnShipDestroyed.AddDynamic(this, &ALanderGameMode::HandleShipDestroyed);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
+		// Subscribe to OnShipDestroyed Event
+		AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
+		Ship = Cast<AShip>(ShipActor);
+		if (Ship)
+		{
+			Ship->OnShipDestroyed.AddDynamic(this, &ALanderGameMode::HandleShipDestroyed);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
+		}
 	}
 
 	// Subscribe to OnShipLanded Event
@@ -81,7 +87,6 @@ void ALanderGameMode::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	if (PlayerController)
 	{
-		FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
 		if (CurrentLevelName == "MainMenu")
 		{
 			AActor* Camera = UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass());
@@ -106,14 +111,20 @@ void ALanderGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	// Unsubscribe from OnShipDestroyed Event
-	if (Ship)
+	FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
+
+
+	if (CurrentLevelName != "MainMenu")
 	{
-		Ship->OnShipDestroyed.RemoveDynamic(this, &ALanderGameMode::HandleShipDestroyed);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
+		// Unsubscribe from OnShipDestroyed Event
+		if (Ship)
+		{
+			Ship->OnShipDestroyed.RemoveDynamic(this, &ALanderGameMode::HandleShipDestroyed);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
+		}
 	}
 
 	// Unsubscribe from OnShipLanded Event
