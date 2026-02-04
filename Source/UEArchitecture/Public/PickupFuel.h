@@ -6,8 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "PickupFuel.generated.h"
 
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup = (Custom), meta = (BlueprintSpawnableComponent) )
 class UEARCHITECTURE_API UPickupFuel : public UActorComponent
 {
 	GENERATED_BODY()
@@ -16,13 +15,34 @@ public:
 	// Sets default values for this component's properties
 	UPickupFuel();
 
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* PickupMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float PickupValue = 20;
+
+	UFUNCTION()
+	void OnBeginOverlap
+	(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComponent,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult
+	);
+
+	UFUNCTION()
+	void CollectPickup(AShip* Ship);
+
+private:
 
 		
 };
