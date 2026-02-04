@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "PickupFuel.generated.h"
+#include "FuelPickup.generated.h"
 
 UCLASS( ClassGroup = (Custom), meta = (BlueprintSpawnableComponent) )
-class UEARCHITECTURE_API UPickupFuel : public UActorComponent
+class UEARCHITECTURE_API UFuelPickup : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UPickupFuel();
+	UFuelPickup();
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -29,7 +29,7 @@ protected:
 	USceneComponent* Pivot = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float PickupValue = 20;
+	float Value = 20;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RotationSpeedMin = 5;

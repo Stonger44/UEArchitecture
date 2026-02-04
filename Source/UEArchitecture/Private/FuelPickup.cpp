@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PickupFuel.h"
+#include "FuelPickup.h"
 #include "Ship.h"
 
 // Sets default values for this component's properties
-UPickupFuel::UPickupFuel()
+UFuelPickup::UFuelPickup()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -14,7 +14,7 @@ UPickupFuel::UPickupFuel()
 
 
 // Called when the game starts
-void UPickupFuel::BeginPlay()
+void UFuelPickup::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -23,11 +23,11 @@ void UPickupFuel::BeginPlay()
 	StaticMesh = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
 	if (StaticMesh && StaticMesh->ComponentHasTag("SM_Barrel"))
 	{
-		StaticMesh->OnComponentBeginOverlap.AddDynamic(this, &UPickupFuel::OnBeginOverlap);
+		StaticMesh->OnComponentBeginOverlap.AddDynamic(this, &UFuelPickup::OnBeginOverlap);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("StaticMesh not found for Pickup Fuel!!!"));
+		UE_LOG(LogTemp, Error, TEXT("StaticMesh not found for FuelPickup!!!"));
 	}
 
 	// Get Pivot
@@ -45,6 +45,8 @@ void UPickupFuel::BeginPlay()
 			float rotationDirection = FMath::RandBool() ? 1 : -1;
 			
 			RotationSpeed = rotationSpeed * rotationDirection;
+			
+			// UE_LOG(LogTemp, Warning, TEXT("Fuel Rotation Speed: %f"), RotationSpeed);
 
 			break;
 		}
@@ -53,7 +55,7 @@ void UPickupFuel::BeginPlay()
 
 
 // Called every frame
-void UPickupFuel::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UFuelPickup::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -62,12 +64,10 @@ void UPickupFuel::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 		FRotator NewRotation = Pivot->GetRelativeRotation();
 		NewRotation.Roll += RotationSpeed * DeltaTime;
 		Pivot->SetRelativeRotation(NewRotation);
-
-		UE_LOG(LogTemp, Warning, TEXT("Fuel Rotation Speed: %f"), RotationSpeed);
 	}
 }
 
-void UPickupFuel::OnBeginOverlap
+void UFuelPickup::OnBeginOverlap
 (
 	UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,
@@ -94,9 +94,9 @@ void UPickupFuel::OnBeginOverlap
 	}
 }
 
-void UPickupFuel::CollectPickup(AShip* Ship)
+void UFuelPickup::CollectPickup(AShip* Ship)
 {
-	Ship->AddFuel(PickupValue);
+	Ship->AddFuel(Value);
 	UE_LOG(LogTemp, Warning, TEXT("Ship has collected a Pickup!!"));
 
 	// Destroy Pickup
