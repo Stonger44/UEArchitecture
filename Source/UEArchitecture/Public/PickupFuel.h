@@ -23,10 +23,19 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* PickupMesh;
+	UStaticMeshComponent* StaticMesh = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USceneComponent* Pivot = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float PickupValue = 20;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float RotationSpeedMin = 5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float RotationSpeedMax = 20;
 
 	UFUNCTION()
 	void OnBeginOverlap
@@ -43,6 +52,5 @@ protected:
 	void CollectPickup(AShip* Ship);
 
 private:
-
-		
+	float RotationSpeed;
 };

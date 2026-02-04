@@ -18,17 +18,37 @@ void UPickupFuel::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PickupMesh = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
-
-	if (PickupMesh)
+	// Get Static Mesh, SM_Barrel
+	StaticMesh = nullptr;
+	StaticMesh = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
+	if (StaticMesh && StaticMesh->ComponentHasTag("SM_Barrel"))
 	{
-		PickupMesh->OnComponentBeginOverlap.AddDynamic(this, &UPickupFuel::OnBeginOverlap);
+		StaticMesh->OnComponentBeginOverlap.AddDynamic(this, &UPickupFuel::OnBeginOverlap);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("PickupMesh not found for Pickup Fuel!!!"));
+		UE_LOG(LogTemp, Error, TEXT("StaticMesh not found for Pickup Fuel!!!"));
 	}
-	
+
+	// Get Pivot
+	Pivot = nullptr;
+	TArray<USceneComponent*> SceneComps;
+	GetOwner()->GetComponents<USceneComponent>(SceneComps);
+
+	for (USceneComponent* Comp : SceneComps)
+	{
+		if (Comp && Comp->ComponentHasTag("Pivot"))
+		{
+			Pivot = Comp;
+
+			float rotationSpeed = FMath::RandRange(RotationSpeedMin, RotationSpeedMax);
+			float rotationDirection = FMath::RandBool() ? 1 : -1;
+			
+			RotationSpeed = rotationSpeed * rotationDirection;
+
+			break;
+		}
+	}
 }
 
 
@@ -37,7 +57,14 @@ void UPickupFuel::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (Pivot)
+	{
+		FRotator NewRotation = Pivot->GetRelativeRotation();
+		NewRotation.Roll += RotationSpeed * DeltaTime;
+		Pivot->SetRelativeRotation(NewRotation);
+
+		UE_LOG(LogTemp, Warning, TEXT("Fuel Rotation Speed: %f"), RotationSpeed);
+	}
 }
 
 void UPickupFuel::OnBeginOverlap
@@ -75,8 +102,8 @@ void UPickupFuel::CollectPickup(AShip* Ship)
 	// Destroy Pickup
 	if (AActor* Owner = GetOwner())
 	{
-		// Owner->SetActorHiddenInGame(true);
-		// Owner->SetActorEnableCollision(false);
+		Owner->SetActorHiddenInGame(true);
+		Owner->SetActorEnableCollision(false);
 		Owner->Destroy();
 	}
 }
