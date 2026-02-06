@@ -56,6 +56,9 @@ public:
 	UFUNCTION()
 	void AddFuel(float FuelToAdd);
 
+	UFUNCTION(BlueprintCallable)
+	float GetFuelPercent();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

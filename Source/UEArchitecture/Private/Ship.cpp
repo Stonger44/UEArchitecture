@@ -59,7 +59,6 @@ void AShip::BeginPlay()
 	ALanderGameMode* LanderGM = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
 	if (LanderGM)
 	{
-		// MaxFuel = LanderGM->MaxFuel;
 		MaxFuel = LanderGM->GetMaxFuel();
 	}
 	else
@@ -82,6 +81,11 @@ void AShip::Tick(float DeltaTime)
 void AShip::AddFuel(float FuelToAdd)
 {
 	Fuel = FMath::Clamp(Fuel + FuelToAdd, 0, MaxFuel);
+}
+
+float AShip::GetFuelPercent()
+{
+	return Fuel / MaxFuel;
 }
 
 void AShip::CheckFuel(float DeltaTime)
