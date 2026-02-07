@@ -29,7 +29,7 @@ protected:
 	USceneComponent* Pivot = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float Value = 20;
+	float Value = 30;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RotationSpeedMin = 5;

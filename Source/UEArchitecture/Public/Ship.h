@@ -102,6 +102,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
 	float FuelDrainRate = 5;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
+	float FuelRefillRate = 15;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
+	float FuelRefillRemaining;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
 	bool bIsThrusting = false;
 
@@ -121,6 +127,8 @@ protected:
 
 	void CheckFuel(float DeltaTime);
 
+	void RefillFuelTimer();
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
@@ -129,4 +137,6 @@ private:
 	UCameraComponent* Camera;
 
 	float LandingRotationThreshold;
+
+	FTimerHandle FuelRefillTimer;
 };

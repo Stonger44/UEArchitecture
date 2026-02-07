@@ -78,16 +78,6 @@ void AShip::Tick(float DeltaTime)
 	CheckFuel(DeltaTime);
 }
 
-void AShip::AddFuel(float FuelToAdd)
-{
-	Fuel = FMath::Clamp(Fuel + FuelToAdd, 0, MaxFuel);
-}
-
-float AShip::GetFuelPercent()
-{
-	return Fuel / MaxFuel;
-}
-
 void AShip::CheckFuel(float DeltaTime)
 {
 	if (bIsThrusting)
@@ -101,10 +91,52 @@ void AShip::CheckFuel(float DeltaTime)
 		}
 	}
 
+	// For Development
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(1, INDEFINITELY_LOOPING_DURATION, FColor::Green, FString::Printf(TEXT("Fuel: %.2f / %.2f"), Fuel, MaxFuel));
 	}
+}
+
+void AShip::AddFuel(float FuelToAdd)
+{
+	// Fuel = FMath::Clamp(Fuel + FuelToAdd, 0, MaxFuel);
+
+	FuelRefillRemaining = FuelToAdd;
+
+	if (!GetWorldTimerManager().IsTimerActive(FuelRefillTimer))
+	{
+		GetWorldTimerManager().SetTimer(
+			FuelRefillTimer,
+			this,
+			&AShip::RefillFuelTimer,
+			0.01f,
+			true
+		);
+	}
+}
+
+void AShip::RefillFuelTimer()
+{
+	float DeltaTime = GetWorld()->GetDeltaSeconds();
+	float FuelToAdd = FuelRefillRate * DeltaTime;
+
+	float FuelAdded = FMath::Min(FuelToAdd, FuelRefillRemaining);
+
+	Fuel += FuelAdded;
+	FuelRefillRemaining -= FuelAdded;
+
+	Fuel = FMath::Min(Fuel, MaxFuel);
+
+	if (FuelRefillRemaining <= 0 || Fuel >= MaxFuel)
+	{
+		GetWorldTimerManager().ClearTimer(FuelRefillTimer);
+	}
+}
+
+float AShip::GetFuelPercent()
+{
+	return Fuel / MaxFuel;
 }
 
 // Called to bind functionality to input
