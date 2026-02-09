@@ -69,28 +69,6 @@ void ALanderGameMode::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No LandingPad found in level!"));
 	}
 
-	//// Enable only UI controls on MainMenu Level
-	//APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	//if (PlayerController)
-	//{
-	//	if (CurrentLevelName == "MainMenu")
-	//	{
-	//		AActor* Camera = UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass());
-
-	//		if (Camera)
-	//		{
-	//			PlayerController->SetViewTargetWithBlend(Camera, 0.f);
-	//		}
-
-	//		PlayerController->bShowMouseCursor = true;
-	//		PlayerController->SetInputMode(FInputModeUIOnly());
-	//	}
-	//	else
-	//	{
-	//		PlayerController->bShowMouseCursor = false;
-	//		PlayerController->SetInputMode(FInputModeGameOnly());
-	//	}
-	//}
 }
 
 void ALanderGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
