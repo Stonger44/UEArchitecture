@@ -25,15 +25,7 @@ ALanderGameMode::ALanderGameMode()
 		UE_LOG(LogTemp, Error, TEXT("DataTable NOT found!"));
 	}
 
-	FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
-	if (CurrentLevelName == "MainMenu")
-	{
-		DefaultPawnClass = nullptr;
-	}
-	else
-	{
-		DefaultPawnClass = AShip::StaticClass();
-	}
+	DefaultPawnClass = AShip::StaticClass();
 }
 
 void ALanderGameMode::BeginPlay()
@@ -53,22 +45,16 @@ void ALanderGameMode::BeginPlay()
 		}
 	}
 
-	FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
-
-	// No player ship in MainMenu, just a static mesh
-	if (CurrentLevelName != "MainMenu")
+	// Subscribe to OnShipDestroyed Event
+	AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
+	Ship = Cast<AShip>(ShipActor);
+	if (Ship)
 	{
-		// Subscribe to OnShipDestroyed Event
-		AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
-		Ship = Cast<AShip>(ShipActor);
-		if (Ship)
-		{
-			Ship->OnShipDestroyed.AddDynamic(this, &ALanderGameMode::HandleShipDestroyed);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
-		}
+		Ship->OnShipDestroyed.AddDynamic(this, &ALanderGameMode::HandleShipDestroyed);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
 	}
 
 	// Subscribe to OnShipLanded Event
@@ -83,48 +69,42 @@ void ALanderGameMode::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No LandingPad found in level!"));
 	}
 
-	// Enable only UI controls on MainMenu Level
-	APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	if (PlayerController)
-	{
-		if (CurrentLevelName == "MainMenu")
-		{
-			AActor* Camera = UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass());
+	//// Enable only UI controls on MainMenu Level
+	//APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	//if (PlayerController)
+	//{
+	//	if (CurrentLevelName == "MainMenu")
+	//	{
+	//		AActor* Camera = UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass());
 
-			if (Camera)
-			{
-				PlayerController->SetViewTargetWithBlend(Camera, 0.f);
-			}
+	//		if (Camera)
+	//		{
+	//			PlayerController->SetViewTargetWithBlend(Camera, 0.f);
+	//		}
 
-			PlayerController->bShowMouseCursor = true;
-			PlayerController->SetInputMode(FInputModeUIOnly());
-		}
-		else
-		{
-			PlayerController->bShowMouseCursor = false;
-			PlayerController->SetInputMode(FInputModeGameOnly());
-		}
-	}
+	//		PlayerController->bShowMouseCursor = true;
+	//		PlayerController->SetInputMode(FInputModeUIOnly());
+	//	}
+	//	else
+	//	{
+	//		PlayerController->bShowMouseCursor = false;
+	//		PlayerController->SetInputMode(FInputModeGameOnly());
+	//	}
+	//}
 }
 
 void ALanderGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
-
-
-	if (CurrentLevelName != "MainMenu")
+	// Unsubscribe from OnShipDestroyed Event
+	if (Ship)
 	{
-		// Unsubscribe from OnShipDestroyed Event
-		if (Ship)
-		{
-			Ship->OnShipDestroyed.RemoveDynamic(this, &ALanderGameMode::HandleShipDestroyed);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
-		}
+		Ship->OnShipDestroyed.RemoveDynamic(this, &ALanderGameMode::HandleShipDestroyed);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
 	}
 
 	// Unsubscribe from OnShipLanded Event
