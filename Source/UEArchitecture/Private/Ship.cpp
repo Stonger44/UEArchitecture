@@ -329,6 +329,12 @@ void AShip::ShipExploded()
 	// Camera shake
 	ShakeCamera();
 
+	// Audio
+	if (ExplosionSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
+	}
+
 	// Freeze Ship
 	ShipMesh->SetSimulatePhysics(false);
 	ShipMesh->SetAllPhysicsLinearVelocity(FVector::ZeroVector);

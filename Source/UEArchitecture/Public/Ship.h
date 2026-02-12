@@ -9,6 +9,7 @@
 #include "Camera/CameraComponent.h"
 #include "InputActionValue.h"
 #include "NiagaraComponent.h"
+#include "Sound/SoundCue.h"
 #include "Ship.generated.h"
 
 class UInputMappingContext;
@@ -117,6 +118,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Ship | VFX")
 	TSubclassOf<UCameraShakeBase> ExplosionShake;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Audio")
+	USoundCue* ExplosionSound;
 
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
