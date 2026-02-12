@@ -322,9 +322,7 @@ void AShip::ShipExploded()
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
 			GetWorld(),
 			ExplosionFX,
-			GetActorLocation(),
-			FRotator::ZeroRotator,
-			FVector(20.f) // Scale multiplier
+			GetActorLocation()
 		);
 	}
 	// Camera shake
