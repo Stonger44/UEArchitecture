@@ -115,6 +115,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
 	UNiagaraSystem* ExplosionFX;
 
+	UPROPERTY(EditAnywhere, Category = "Ship | VFX")
+	TSubclassOf<UCameraShakeBase> ExplosionShake;
+
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
 
@@ -133,12 +136,17 @@ protected:
 
 	void RefillFuelTimer();
 
+	void ShakeCamera();
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
+
+	UPROPERTY()
+	APlayerController* PlayerController;
 
 	float LandingRotationThreshold;
 

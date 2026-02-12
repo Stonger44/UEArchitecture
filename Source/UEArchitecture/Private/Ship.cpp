@@ -43,9 +43,10 @@ void AShip::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (APlayerController* playerController = Cast<APlayerController>(GetController()))
+	PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* enhancedInputLocalPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(playerController->GetLocalPlayer()))
+		if (UEnhancedInputLocalPlayerSubsystem* enhancedInputLocalPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			enhancedInputLocalPlayerSubsystem->AddMappingContext(ShipMappingContext, 0);
 		}
@@ -315,7 +316,6 @@ void AShip::ShipExploded()
 	DisableShipControls();
 	bIsThrusting = false;
 
-	// TODO
 	// Create explosion
 	if (ExplosionFX)
 	{
@@ -325,7 +325,9 @@ void AShip::ShipExploded()
 			GetActorLocation()
 		);
 	}
+
 	// Camera shake
+	ShakeCamera();
 
 	// Freeze Ship
 	ShipMesh->SetSimulatePhysics(false);
@@ -341,9 +343,16 @@ void AShip::ShipExploded()
 
 void AShip::DisableShipControls()
 {
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
 		DisableInput(PlayerController);
+	}
+}
+
+void AShip::ShakeCamera()
+{
+	if (PlayerController && ExplosionShake)
+	{
+		PlayerController->ClientStartCameraShake(ExplosionShake);
 	}
 }
