@@ -8,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "InputActionValue.h"
+#include "NiagaraComponent.h"
 #include "Ship.generated.h"
 
 class UInputMappingContext;
@@ -110,6 +111,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
 	bool bIsThrusting = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	UNiagaraSystem* ExplosionFX;
 
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);

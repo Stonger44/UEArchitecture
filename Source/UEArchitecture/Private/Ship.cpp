@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
+#include <NiagaraFunctionLibrary.h>
 
 // Sets default values
 AShip::AShip()
@@ -298,7 +299,10 @@ void AShip::ShipCrashed()
 	DisableShipControls();
 	bIsThrusting = false;
 
-	// TODO: Create explosion, smoke/burning effect
+	// TODO:
+	// Create explosion
+	// Smoke trail effect
+	// fire on ground
 
 	OnShipDestroyed.Broadcast();
 }
@@ -311,7 +315,28 @@ void AShip::ShipExploded()
 	DisableShipControls();
 	bIsThrusting = false;
 
-	// TODO: Create explosion
+	// TODO
+	// Create explosion
+	if (ExplosionFX)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			ExplosionFX,
+			GetActorLocation(),
+			FRotator::ZeroRotator,
+			FVector(20.f) // Scale multiplier
+		);
+	}
+	// Camera shake
+
+	// Freeze Ship
+	ShipMesh->SetSimulatePhysics(false);
+	ShipMesh->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
+	ShipMesh->SetAllPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+
+	// Hide Ship mesh during explosion
+	ShipMesh->SetVisibility(false, true);
+	ShipMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	OnShipDestroyed.Broadcast();
 }
