@@ -114,13 +114,19 @@ protected:
 	bool bIsThrusting = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
-	UNiagaraSystem* ExplosionFX;
+	UNiagaraSystem* ExplosionFX_Big;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	UNiagaraSystem* ExplosionFX_Small;
 
 	UPROPERTY(EditAnywhere, Category = "Ship | VFX")
 	TSubclassOf<UCameraShakeBase> ExplosionShake;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Audio")
-	USoundCue* ExplosionSound;
+	USoundCue* ExplosionSoundBig;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Audio")
+	USoundCue* ExplosionSoundSmall;
 
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
@@ -139,6 +145,8 @@ protected:
 	void CheckFuel(float DeltaTime);
 
 	void RefillFuelTimer();
+
+	void SpawnExplosion(UNiagaraSystem* ExplosionToSpawn);
 
 	void ShakeCamera();
 

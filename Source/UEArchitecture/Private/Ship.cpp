@@ -300,10 +300,20 @@ void AShip::ShipCrashed()
 	DisableShipControls();
 	bIsThrusting = false;
 
-	// TODO:
 	// Create explosion
+	SpawnExplosion(ExplosionFX_Small);
+	
+	// Audio
+	if (ExplosionSoundSmall)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ExplosionSoundSmall, GetActorLocation());
+	}
+	
 	// Smoke trail effect
+
+
 	// fire on ground
+
 
 	OnShipDestroyed.Broadcast();
 }
@@ -317,22 +327,15 @@ void AShip::ShipExploded()
 	bIsThrusting = false;
 
 	// Create explosion
-	if (ExplosionFX)
-	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			GetWorld(),
-			ExplosionFX,
-			GetActorLocation()
-		);
-	}
+	SpawnExplosion(ExplosionFX_Big);
 
 	// Camera shake
 	ShakeCamera();
 
 	// Audio
-	if (ExplosionSound)
+	if (ExplosionSoundBig)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, ExplosionSoundBig, GetActorLocation());
 	}
 
 	// Freeze Ship
@@ -352,6 +355,18 @@ void AShip::DisableShipControls()
 	if (PlayerController)
 	{
 		DisableInput(PlayerController);
+	}
+}
+
+void AShip::SpawnExplosion(UNiagaraSystem* ExplosionToSpawn)
+{
+	if (ExplosionToSpawn)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			ExplosionToSpawn,
+			GetActorLocation()
+		);
 	}
 }
 
