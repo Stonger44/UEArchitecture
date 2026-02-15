@@ -32,6 +32,10 @@ AShip::AShip()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 
+	FireSmokeTrail = CreateDefaultSubobject<UNiagaraComponent>(TEXT("FireSmokeTrail"));
+	FireSmokeTrail->SetupAttachment(ShipMesh);
+	FireSmokeTrail->bAutoActivate = false;
+
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	ShipMesh->SetAngularDamping(5);
@@ -69,7 +73,6 @@ void AShip::BeginPlay()
 	}
 
 	Fuel = MaxFuel;
-
 }
 
 // Called every frame
@@ -301,16 +304,19 @@ void AShip::ShipCrashed()
 	bIsThrusting = false;
 
 	// Create explosion
-	SpawnExplosion(ExplosionFX_Small);
+	SpawnExplosion(NS_ExplosionSmall);
 	
 	// Audio
-	if (ExplosionSoundSmall)
+	if (SC_ExplosionSmall)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, ExplosionSoundSmall, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, SC_ExplosionSmall, GetActorLocation());
 	}
 	
 	// Smoke trail effect
-
+	if (FireSmokeTrail)
+	{
+		FireSmokeTrail->Activate();
+	}
 
 	// fire on ground
 
@@ -327,15 +333,15 @@ void AShip::ShipExploded()
 	bIsThrusting = false;
 
 	// Create explosion
-	SpawnExplosion(ExplosionFX_Big);
+	SpawnExplosion(NS_ExplosionBig);
 
 	// Camera shake
 	ShakeCamera();
 
 	// Audio
-	if (ExplosionSoundBig)
+	if (SC_ExplosionBig)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, ExplosionSoundBig, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, SC_ExplosionBig, GetActorLocation());
 	}
 
 	// Freeze Ship
