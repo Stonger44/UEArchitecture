@@ -32,8 +32,16 @@ AShip::AShip()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 
+	FireSmokeTrailPivot = CreateDefaultSubobject<USceneComponent>(TEXT("FireSmokeTrailPivot"));
+	FireSmokeTrailPivot->SetupAttachment(ShipMesh);
+	FireSmokeTrailPivot->SetRelativeLocation(FVector(-200.f, -50.f, 100.f));
+	FireSmokeTrailPivot->SetRelativeRotation(FRotator::ZeroRotator);
+	FireSmokeTrailPivot->SetUsingAbsoluteRotation(true);
+
 	FireSmokeTrail = CreateDefaultSubobject<UNiagaraComponent>(TEXT("FireSmokeTrail"));
-	FireSmokeTrail->SetupAttachment(ShipMesh);
+	FireSmokeTrail->SetupAttachment(FireSmokeTrailPivot);
+	FireSmokeTrail->SetRelativeLocation(FVector::ZeroVector);
+	FireSmokeTrail->SetRelativeRotation(FRotator::ZeroRotator);
 	FireSmokeTrail->bAutoActivate = false;
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -81,6 +89,10 @@ void AShip::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	CheckFuel(DeltaTime);
+
+	FVector Offset = FVector(-100.f, -50.f, 100.f);
+	FireSmokeTrail->SetWorldLocation(GetActorLocation() + Offset);
+	FireSmokeTrail->SetWorldRotation(FRotator::ZeroRotator);
 }
 
 void AShip::CheckFuel(float DeltaTime)

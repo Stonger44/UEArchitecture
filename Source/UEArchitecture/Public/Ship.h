@@ -72,6 +72,9 @@ protected:
 	UStaticMeshComponent* VisualMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	USceneComponent* FireSmokeTrailPivot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
 	UNiagaraComponent* FireSmokeTrail;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
