@@ -105,8 +105,6 @@ void AShip::CheckFuel(float DeltaTime)
 
 void AShip::AddFuel(float FuelToAdd)
 {
-	// Fuel = FMath::Clamp(Fuel + FuelToAdd, 0, MaxFuel);
-
 	FuelRefillRemaining = FuelToAdd;
 
 	if (!GetWorldTimerManager().IsTimerActive(FuelRefillTimer))

@@ -121,14 +121,14 @@ void ALanderGameMode::HandleShipDestroyed()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Ship has been destroyed! Restarting level..."));
 
-	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::RestartCurrentLevel, 3.0f, false);
+	GetWorldTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::RestartCurrentLevel, 6.0f, false);
 }
 
 void ALanderGameMode::HandleShipLanded()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Ship has landed! Loading next level..."));
 
-	GetWorld()->GetTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::LoadNextLevel, 3.0f, false);
+	GetWorldTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::LoadNextLevel, 3.0f, false);
 }
 
 void ALanderGameMode::RestartCurrentLevel()
