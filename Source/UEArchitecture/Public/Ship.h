@@ -125,6 +125,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
 	UNiagaraSystem* NS_ExplosionSmall;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	UNiagaraSystem* NS_GroundFireBig;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	UNiagaraSystem* NS_GroundFireMedium;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	UNiagaraSystem* NS_GroundFireSmall;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX")
 	USoundCue* SC_ExplosionBig;
 
