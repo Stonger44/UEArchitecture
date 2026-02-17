@@ -50,11 +50,11 @@ public:
 	UPROPERTY()
 	FOnShipDestroyed OnShipDestroyed;
 
-	UFUNCTION()
-	void TriggerCrash();
+	/*UFUNCTION()
+	void TriggerCrash();*/
 	
 	UFUNCTION()
-	void TriggerExplode();
+	void TriggerExplode(bool ShipExplodedFromCrash);
 
 	UFUNCTION()
 	void AddFuel(float FuelToAdd);
@@ -129,15 +129,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
 	UNiagaraSystem* NS_ExplosionSmall;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
-	UNiagaraSystem* NS_GroundFireBig;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
-	UNiagaraSystem* NS_GroundFireMedium;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
-	UNiagaraSystem* NS_GroundFireSmall;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX")
 	USoundCue* SC_ExplosionBig;
 
@@ -154,7 +145,7 @@ protected:
 	void ShipReady();
 	void ShipLanded();
 	void ShipCrashed();
-	void ShipExploded(bool HideShip);
+	void ShipExploded(bool ShipExplodedFromCrash);
 
 	void DisableShipControls();
 
@@ -162,7 +153,7 @@ protected:
 
 	void RefillFuelTimer();
 
-	void SpawnExplosion(UNiagaraSystem* ExplosionToSpawn);
+	void SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystemToSpawn, FVector LocationOffset = FVector::ZeroVector);
 
 	void ShakeCamera();
 

@@ -58,7 +58,7 @@ void UKillVolume::OnBeginOverlap
 		if (Ship)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Ship out of bounds!!"));
-			Ship->TriggerExplode();
+			Ship->TriggerExplode(false);
 		}
 	}
 }

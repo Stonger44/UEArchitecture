@@ -92,7 +92,7 @@ void AShip::Tick(float DeltaTime)
 
 	if (FireSmokeTrail->IsActive())
 	{
-		FVector Offset = FVector(-100.f, -50.f, 100.f);
+		FVector Offset = FVector(-150.f, -50.f, 100.f);
 		FireSmokeTrail->SetWorldLocation(GetActorLocation() + Offset);
 		FireSmokeTrail->SetWorldRotation(FRotator::ZeroRotator);
 	}
@@ -104,7 +104,7 @@ void AShip::Tick(float DeltaTime)
 
 		if (LinearVel.Size() == 0 && AngularVel.Size() == 0)
 		{
-			ShipExploded(false);
+			ShipExploded(true);
 		}
 	}
 }
@@ -294,14 +294,14 @@ bool AShip::IsShipRotationSafe()
 	return shipUpAlignment >= LandingRotationThreshold;
 }
 
-void AShip::TriggerCrash()
-{
-	ShipCrashed();
-}
+//void AShip::TriggerCrash()
+//{
+//	ShipCrashed();
+//}
 
-void AShip::TriggerExplode()
+void AShip::TriggerExplode(bool ShipExplodedFromCrash)
 {
-	ShipExploded(true);
+	ShipExploded(ShipExplodedFromCrash);
 }
 
 void AShip::ShipReady()
@@ -328,7 +328,7 @@ void AShip::ShipCrashed()
 	bIsThrusting = false;
 
 	// Create explosion
-	SpawnExplosion(NS_ExplosionSmall);
+	SpawnNiagaraSystem(NS_ExplosionSmall);
 	
 	// Audio
 	if (SC_ExplosionSmall)
@@ -343,7 +343,7 @@ void AShip::ShipCrashed()
 	}
 }
 
-void AShip::ShipExploded(bool HideShip)
+void AShip::ShipExploded(bool ShipExplodedFromCrash)
 {
 	ShipStatus = EShipStatus::Exploded;
 	UE_LOG(LogTemp, Error, TEXT("SHIP HAS EXPLODED!"));
@@ -352,7 +352,7 @@ void AShip::ShipExploded(bool HideShip)
 	bIsThrusting = false;
 
 	// Create explosion
-	SpawnExplosion(NS_ExplosionBig);
+	SpawnNiagaraSystem(NS_ExplosionBig);
 
 	// Camera shake
 	ShakeCamera();
@@ -363,7 +363,7 @@ void AShip::ShipExploded(bool HideShip)
 		UGameplayStatics::PlaySoundAtLocation(this, SC_ExplosionBig, GetActorLocation());
 	}
 
-	if (HideShip)
+	if (!ShipExplodedFromCrash)
 	{
 		// Freeze Ship
 		ShipMesh->SetSimulatePhysics(false);
@@ -391,14 +391,14 @@ void AShip::DisableShipControls()
 	}
 }
 
-void AShip::SpawnExplosion(UNiagaraSystem* ExplosionToSpawn)
+void AShip::SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystemToSpawn, FVector LocationOffset)
 {
-	if (ExplosionToSpawn)
+	if (NiagaraSystemToSpawn)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
 			GetWorld(),
-			ExplosionToSpawn,
-			GetActorLocation()
+			NiagaraSystemToSpawn,
+			GetActorLocation() + LocationOffset
 		);
 	}
 }
