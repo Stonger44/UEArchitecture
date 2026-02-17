@@ -55,10 +55,10 @@ void AShip::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	PlayerController = Cast<APlayerController>(GetController());
-	if (PlayerController)
+	LanderPlayerController = Cast<ALanderPlayerController>(GetController());
+	if (LanderPlayerController)
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* enhancedInputLocalPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		if (UEnhancedInputLocalPlayerSubsystem* enhancedInputLocalPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LanderPlayerController->GetLocalPlayer()))
 		{
 			enhancedInputLocalPlayerSubsystem->AddMappingContext(ShipMappingContext, 0);
 		}
@@ -90,9 +90,23 @@ void AShip::Tick(float DeltaTime)
 
 	CheckFuel(DeltaTime);
 
-	FVector Offset = FVector(-100.f, -50.f, 100.f);
-	FireSmokeTrail->SetWorldLocation(GetActorLocation() + Offset);
-	FireSmokeTrail->SetWorldRotation(FRotator::ZeroRotator);
+	if (FireSmokeTrail->IsActive())
+	{
+		FVector Offset = FVector(-100.f, -50.f, 100.f);
+		FireSmokeTrail->SetWorldLocation(GetActorLocation() + Offset);
+		FireSmokeTrail->SetWorldRotation(FRotator::ZeroRotator);
+	}
+
+	if (ShipStatus == EShipStatus::Crashed)
+	{
+		FVector LinearVel = ShipMesh->GetPhysicsLinearVelocity();
+		FVector AngularVel = ShipMesh->GetPhysicsAngularVelocityInDegrees();
+
+		if (LinearVel.Size() == 0 && AngularVel.Size() == 0)
+		{
+			ShipExploded(false);
+		}
+	}
 }
 
 void AShip::CheckFuel(float DeltaTime)
@@ -287,7 +301,7 @@ void AShip::TriggerCrash()
 
 void AShip::TriggerExplode()
 {
-	ShipExploded();
+	ShipExploded(true);
 }
 
 void AShip::ShipReady()
@@ -327,14 +341,9 @@ void AShip::ShipCrashed()
 	{
 		FireSmokeTrail->Activate();
 	}
-
-	// fire on ground
-
-
-	OnShipDestroyed.Broadcast();
 }
 
-void AShip::ShipExploded()
+void AShip::ShipExploded(bool HideShip)
 {
 	ShipStatus = EShipStatus::Exploded;
 	UE_LOG(LogTemp, Error, TEXT("SHIP HAS EXPLODED!"));
@@ -354,23 +363,31 @@ void AShip::ShipExploded()
 		UGameplayStatics::PlaySoundAtLocation(this, SC_ExplosionBig, GetActorLocation());
 	}
 
-	// Freeze Ship
-	ShipMesh->SetSimulatePhysics(false);
-	ShipMesh->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
-	ShipMesh->SetAllPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+	if (HideShip)
+	{
+		// Freeze Ship
+		ShipMesh->SetSimulatePhysics(false);
+		ShipMesh->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
+		ShipMesh->SetAllPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 
-	// Hide Ship mesh during explosion
-	ShipMesh->SetVisibility(false, true);
-	ShipMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		// Hide Ship mesh during explosion
+		VisualMesh->SetVisibility(false, false);
+		ShipMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		if (FireSmokeTrail->IsVisible())
+		{
+			FireSmokeTrail->SetVisibility(false, false);
+		}
+	}
 
 	OnShipDestroyed.Broadcast();
 }
 
 void AShip::DisableShipControls()
 {
-	if (PlayerController)
+	if (LanderPlayerController)
 	{
-		DisableInput(PlayerController);
+		DisableInput(LanderPlayerController);
 	}
 }
 
@@ -388,8 +405,8 @@ void AShip::SpawnExplosion(UNiagaraSystem* ExplosionToSpawn)
 
 void AShip::ShakeCamera()
 {
-	if (PlayerController && ExplosionShake)
+	if (LanderPlayerController && ExplosionShake)
 	{
-		PlayerController->ClientStartCameraShake(ExplosionShake);
+		LanderPlayerController->ClientStartCameraShake(ExplosionShake);
 	}
 }

@@ -7,6 +7,7 @@
 #include "Data/LevelData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraActor.h"
+#include <LanderPlayerController.h>
 
 ALanderGameMode::ALanderGameMode()
 {
@@ -121,7 +122,6 @@ void ALanderGameMode::HandleShipDestroyed()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Ship has been destroyed! Restarting level..."));
 
-	// GetWorldTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::RestartCurrentLevel, 6.0f, false);
 	GetWorldTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::TriggerGameOver, 3.0f, false);
 }
 
@@ -137,7 +137,11 @@ void ALanderGameMode::TriggerGameOver()
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
 	if (PC)
 	{
-		//PC->ShowGameOverMenu();
+		ALanderPlayerController* LPC = Cast<ALanderPlayerController>(PC);
+		if (LPC)
+		{
+			LPC->ShowGameOverMenu();
+		}
 	}
 }
 

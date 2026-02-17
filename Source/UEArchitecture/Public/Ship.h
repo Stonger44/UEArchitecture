@@ -10,6 +10,7 @@
 #include "InputActionValue.h"
 #include "NiagaraComponent.h"
 #include "Sound/SoundCue.h"
+#include "LanderPlayerController.h"
 #include "Ship.generated.h"
 
 class UInputMappingContext;
@@ -153,7 +154,7 @@ protected:
 	void ShipReady();
 	void ShipLanded();
 	void ShipCrashed();
-	void ShipExploded();
+	void ShipExploded(bool HideShip);
 
 	void DisableShipControls();
 
@@ -173,7 +174,7 @@ private:
 	UCameraComponent* Camera;
 
 	UPROPERTY()
-	APlayerController* PlayerController;
+	ALanderPlayerController* LanderPlayerController;
 
 	float LandingRotationThreshold;
 

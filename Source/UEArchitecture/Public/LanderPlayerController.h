@@ -11,4 +11,13 @@ class UEARCHITECTURE_API ALanderPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowGameOverMenu();
+
+protected:
+
+
+private:
+
 };
