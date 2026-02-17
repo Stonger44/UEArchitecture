@@ -46,6 +46,9 @@ protected:
 	UFUNCTION()
 	void LoadNextLevel();
 
+	UFUNCTION()
+	void TriggerGameOver();
+
 private:
 	FTimerHandle LevelLoadTimer;
 
