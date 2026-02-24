@@ -122,7 +122,7 @@ void ALanderGameMode::HandleShipDestroyed()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Ship has been destroyed! Restarting level..."));
 
-	GetWorldTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::TriggerGameOver, 2.0f, false);
+	GetWorldTimerManager().SetTimer(TriggerGameOverTimer, this, &ALanderGameMode::TriggerGameOver, 2.0f, false);
 }
 
 void ALanderGameMode::HandleShipLanded()

@@ -94,7 +94,10 @@ protected:
 	UInputAction* RotateAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
-	float MaxLandingRotation = 25;
+	float MaxInitialLandingRotation = 25;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
+	float MaxLandingEvaluationRotation = 50;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
 	float MaxLandingSpeed = 300;
@@ -138,8 +141,8 @@ protected:
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
 
-	void CheckShipLanding(AActor* Other);
-	bool IsShipRotationSafe();
+	void CheckShipTouchdown();
+	bool IsShipRotationSafe(float RotationThreshold);
 	bool IsShipSpeedSafe();
 
 	void ShipReady();
@@ -150,6 +153,8 @@ protected:
 	void DisableShipControls();
 
 	void CheckFuel(float DeltaTime);
+
+	bool HasShipStoppedMoving();
 
 	void RefillFuelTimer();
 
@@ -167,7 +172,12 @@ private:
 	UPROPERTY()
 	ALanderPlayerController* LanderPlayerController;
 
-	float LandingRotationThreshold;
+	UPROPERTY()
+	AActor* CurrentTouchdownTarget = nullptr;
+
+	float InitialLandingRotationThreshold;
+	float LandingEvaluationRotationThreshold;
 
 	FTimerHandle FuelRefillTimer;
+	FTimerHandle LandingEvaluationTimer;
 };

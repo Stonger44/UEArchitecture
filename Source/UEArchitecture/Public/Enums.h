@@ -9,11 +9,12 @@
 UENUM(BlueprintType) // lets you use it in Blueprints too
 enum class EShipStatus : uint8
 {
-	Ready		UMETA(DisplayName = "Ready"),
-	Launched	UMETA(DisplayName = "Launched"),
-	Landed		UMETA(DisplayName = "Landed"),
-	Crashed		UMETA(DisplayName = "Crashed"),
-	Exploded	UMETA(DisplayName = "Exploded")
+	Ready				UMETA(DisplayName = "Ready"),
+	Launched			UMETA(DisplayName = "Launched"),
+	LandingEvaluation	UMETA(DisplayName = "LandingEvaluation"),
+	Landed				UMETA(DisplayName = "Landed"),
+	Crashed				UMETA(DisplayName = "Crashed"),
+	Exploded			UMETA(DisplayName = "Exploded")
 };
 
 //UENUM(BlueprintType)

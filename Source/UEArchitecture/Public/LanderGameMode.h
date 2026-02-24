@@ -50,6 +50,7 @@ protected:
 	void TriggerGameOver();
 
 private:
+	FTimerHandle TriggerGameOverTimer;
 	FTimerHandle LevelLoadTimer;
 
 	UPROPERTY()

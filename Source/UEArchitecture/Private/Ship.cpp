@@ -64,9 +64,12 @@ void AShip::BeginPlay()
 		}
 	}
 
-	// Calculate Landing Rotation Threshold
-	LandingRotationThreshold = FMath::Cos(FMath::DegreesToRadians(MaxLandingRotation));
-	UE_LOG(LogTemp, Warning, TEXT("Landing Rotation Threshold: %f"), LandingRotationThreshold);
+	// Calculate Landing Rotation Thresholds
+	InitialLandingRotationThreshold = FMath::Cos(FMath::DegreesToRadians(MaxInitialLandingRotation));
+	UE_LOG(LogTemp, Warning, TEXT("Landing Rotation Threshold: %f"), InitialLandingRotationThreshold);
+
+	LandingEvaluationRotationThreshold = FMath::Cos(FMath::DegreesToRadians(MaxLandingEvaluationRotation));
+	UE_LOG(LogTemp, Warning, TEXT("Landing Evaluation Rotation Threshold: %f"), LandingEvaluationRotationThreshold);
 
 	ShipStatus = EShipStatus::Ready;
 
@@ -99,14 +102,46 @@ void AShip::Tick(float DeltaTime)
 
 	if (ShipStatus == EShipStatus::Crashed)
 	{
-		FVector LinearVel = ShipMesh->GetPhysicsLinearVelocity();
-		FVector AngularVel = ShipMesh->GetPhysicsAngularVelocityInDegrees();
-
-		if (LinearVel.Size() == 0 && AngularVel.Size() == 0)
+		if (HasShipStoppedMoving())
 		{
 			ShipExploded(true);
 		}
 	}
+
+	if (ShipStatus == EShipStatus::LandingEvaluation)
+	{
+		if (HasShipStoppedMoving())
+		{
+			if (IsShipRotationSafe(LandingEvaluationRotationThreshold))
+			{
+				if (CurrentTouchdownTarget)
+				{
+					if (CurrentTouchdownTarget->IsA(ALaunchPad::StaticClass()))
+					{
+						ShipReady();
+					}
+					
+					if (CurrentTouchdownTarget->IsA(ALandingPad::StaticClass()))
+					{
+						ShipLanded();
+					}
+				}
+				
+			}
+			else
+			{
+				ShipCrashed();
+			}
+		}
+	}
+}
+
+bool AShip::HasShipStoppedMoving()
+{
+	FVector LinearVelocity = ShipMesh->GetPhysicsLinearVelocity();
+	FVector AngularVelocity = ShipMesh->GetPhysicsAngularVelocityInDegrees();
+
+	return (LinearVelocity.Size() == 0 && AngularVelocity.Size() == 0);
 }
 
 void AShip::CheckFuel(float DeltaTime)
@@ -122,11 +157,11 @@ void AShip::CheckFuel(float DeltaTime)
 		}
 	}
 
-	// For Development
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(1, INDEFINITELY_LOOPING_DURATION, FColor::Green, FString::Printf(TEXT("Fuel: %.2f / %.2f"), Fuel, MaxFuel));
-	}
+	//// For Development
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(1, INDEFINITELY_LOOPING_DURATION, FColor::Green, FString::Printf(TEXT("Fuel: %.2f / %.2f"), Fuel, MaxFuel));
+	//}
 }
 
 void AShip::AddFuel(float FuelToAdd)
@@ -192,9 +227,10 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 
 	if (bIsThrusting && Fuel > 0)
 	{
-		if (ShipStatus == EShipStatus::Ready)
+		if (ShipStatus == EShipStatus::Ready || ShipStatus == EShipStatus::LandingEvaluation)
 		{
 			ShipStatus = EShipStatus::Launched;
+			CurrentTouchdownTarget = nullptr;
 		}
 
 		const FVector thrust = GetActorUpVector() * ThrustStrength;
@@ -239,7 +275,9 @@ void AShip::NotifyHit
 		{
 			if (Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
 			{
-				CheckShipLanding(Other);
+				//instead of parameter, save what Player has toucheddown on in variable? clear variable if ship launches off of launchpad?
+				CurrentTouchdownTarget = Other;
+				CheckShipTouchdown();
 			}
 			else
 			{
@@ -249,18 +287,12 @@ void AShip::NotifyHit
 	}
 }
 
-void AShip::CheckShipLanding(AActor* Other)
+void AShip::CheckShipTouchdown()
 {
-	if (IsShipSpeedSafe() && IsShipRotationSafe())
+	if (IsShipSpeedSafe() && IsShipRotationSafe(InitialLandingRotationThreshold))
 	{
-		if (ALaunchPad* LaunchPad = Cast<ALaunchPad>(Other))
-		{
-			ShipReady();
-		}
-		else if (ALandingPad* LandingPad = Cast<ALandingPad>(Other))
-		{
-			ShipLanded();
-		}
+		// After ship touches down, check to see if ship has fallen over
+		ShipStatus = EShipStatus::LandingEvaluation;
 	}
 	else
 	{
@@ -279,7 +311,7 @@ bool AShip::IsShipSpeedSafe()
 	return shipSpeed <= MaxLandingSpeed;
 }
 
-bool AShip::IsShipRotationSafe()
+bool AShip::IsShipRotationSafe(float RotationThreshold)
 {
 	FVector shipUpVector = this->GetActorUpVector();
 
@@ -288,10 +320,10 @@ bool AShip::IsShipRotationSafe()
 	UE_LOG(LogTemp, Warning, TEXT("Ship Up Alignment: %f"), shipUpAlignment);
 
 	// Compare ship alignment with threshold
-	UE_LOG(LogTemp, Warning, TEXT("Rotation Threshold: %f"), LandingRotationThreshold);
-	UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), shipUpAlignment >= LandingRotationThreshold ? TEXT("True") : TEXT("False"));
+	UE_LOG(LogTemp, Warning, TEXT("Rotation Threshold: %f"), RotationThreshold);
+	UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), shipUpAlignment >= RotationThreshold ? TEXT("True") : TEXT("False"));
 
-	return shipUpAlignment >= LandingRotationThreshold;
+	return shipUpAlignment >= RotationThreshold;
 }
 
 //void AShip::TriggerCrash()
