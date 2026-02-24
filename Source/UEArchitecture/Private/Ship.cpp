@@ -136,12 +136,88 @@ void AShip::Tick(float DeltaTime)
 	}
 }
 
-bool AShip::HasShipStoppedMoving()
+void AShip::NotifyHit
+(
+	class UPrimitiveComponent* MyComp,
+	AActor* Other,
+	class UPrimitiveComponent* OtherComp,
+	bool bSelfMoved,
+	FVector HitLocation,
+	FVector HitNormal,
+	FVector NormalImpulse,
+	const FHitResult& Hit
+)
 {
-	FVector LinearVelocity = ShipMesh->GetPhysicsLinearVelocity();
-	FVector AngularVelocity = ShipMesh->GetPhysicsAngularVelocityInDegrees();
+	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
-	return (LinearVelocity.Size() == 0 && AngularVelocity.Size() == 0);
+	if (ShipStatus == EShipStatus::Launched)
+	{
+		if (Other && Other != this)
+		{
+			if (Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
+			{
+				//instead of parameter, save what Player has toucheddown on in variable? clear variable if ship launches off of launchpad?
+				CurrentTouchdownTarget = Other;
+				CheckShipTouchdown();
+			}
+			else
+			{
+				ShipCrashed();
+			}
+		}
+	}
+}
+
+// Called to bind functionality to input
+void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		// Bind Thrust Actions to Function
+		EnhancedInputComponent->BindAction(ThrustAction, ETriggerEvent::Triggered, this, &AShip::Thrust);
+		EnhancedInputComponent->BindAction(ThrustAction, ETriggerEvent::Completed, this, &AShip::Thrust);
+
+		//Bind Rotate Actions to Function
+		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AShip::Rotate);
+	}
+
+}
+
+void AShip::Thrust(const FInputActionValue& InputValue)
+{
+	bIsThrusting = InputValue.Get<bool>();
+	// UE_LOG(LogTemp, Warning, TEXT("IsThrusting: %s"), InputValue.Get<bool>() ? TEXT("true") : TEXT("false"))
+
+	if (bIsThrusting && Fuel > 0)
+	{
+		if (ShipStatus == EShipStatus::Ready || ShipStatus == EShipStatus::LandingEvaluation)
+		{
+			ShipStatus = EShipStatus::Launched;
+			CurrentTouchdownTarget = nullptr;
+		}
+
+		const FVector thrust = GetActorUpVector() * ThrustStrength;
+		// UE_LOG(LogTemp, Warning, TEXT("GetActorUpVector Impulse: %s"), *thrust.ToString());
+
+		ShipMesh->AddForce(thrust, NAME_None, true);
+
+		// DrawDebugSphere(GetWorld(), ShipMesh->GetCenterOfMass(), 10, 16, FColor::Green, false, -1, 1, .5);
+
+	}
+}
+
+void AShip::Rotate(const FInputActionValue& InputValue)
+{
+	if (float currentValue = InputValue.Get<float>())
+	{
+		// UE_LOG(LogTemp, Warning, TEXT("Input Value: %f"), currentValue)
+		const FVector torque = FVector(-currentValue, 0, 0) * TorqueStrength;
+
+		ShipMesh->AddTorqueInRadians(torque, NAME_None, true);
+
+	}
 }
 
 void AShip::CheckFuel(float DeltaTime)
@@ -203,90 +279,6 @@ float AShip::GetFuelPercent()
 	return Fuel / MaxFuel;
 }
 
-// Called to bind functionality to input
-void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		// Bind Thrust Actions to Function
-		EnhancedInputComponent->BindAction(ThrustAction, ETriggerEvent::Triggered, this, &AShip::Thrust);
-		EnhancedInputComponent->BindAction(ThrustAction, ETriggerEvent::Completed, this, &AShip::Thrust);
-
-		//Bind Rotate Actions to Function
-		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AShip::Rotate);
-	}
-
-}
-
-void AShip::Thrust(const FInputActionValue& InputValue)
-{
-	bIsThrusting = InputValue.Get<bool>();
-	// UE_LOG(LogTemp, Warning, TEXT("IsThrusting: %s"), InputValue.Get<bool>() ? TEXT("true") : TEXT("false"))
-
-	if (bIsThrusting && Fuel > 0)
-	{
-		if (ShipStatus == EShipStatus::Ready || ShipStatus == EShipStatus::LandingEvaluation)
-		{
-			ShipStatus = EShipStatus::Launched;
-			CurrentTouchdownTarget = nullptr;
-		}
-
-		const FVector thrust = GetActorUpVector() * ThrustStrength;
-		// UE_LOG(LogTemp, Warning, TEXT("GetActorUpVector Impulse: %s"), *thrust.ToString());
-
-		ShipMesh->AddForce(thrust, NAME_None, true);
-
-		// DrawDebugSphere(GetWorld(), ShipMesh->GetCenterOfMass(), 10, 16, FColor::Green, false, -1, 1, .5);
-
-	}
-}
-
-void AShip::Rotate(const FInputActionValue& InputValue)
-{
-	if (float currentValue = InputValue.Get<float>())
-	{
-		// UE_LOG(LogTemp, Warning, TEXT("Input Value: %f"), currentValue)
-		const FVector torque = FVector(-currentValue, 0, 0) * TorqueStrength;
-
-		ShipMesh->AddTorqueInRadians(torque, NAME_None, true);
-
-	}
-}
-
-void AShip::NotifyHit
-(
-	class UPrimitiveComponent* MyComp,
-	AActor* Other,
-	class UPrimitiveComponent* OtherComp,
-	bool bSelfMoved,
-	FVector HitLocation,
-	FVector HitNormal,
-	FVector NormalImpulse,
-	const FHitResult& Hit
-)
-{
-	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
-
-	if (ShipStatus == EShipStatus::Launched)
-	{
-		if (Other && Other != this)
-		{
-			if (Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
-			{
-				//instead of parameter, save what Player has toucheddown on in variable? clear variable if ship launches off of launchpad?
-				CurrentTouchdownTarget = Other;
-				CheckShipTouchdown();
-			}
-			else
-			{
-				ShipCrashed();
-			}
-		}
-	}
-}
-
 void AShip::CheckShipTouchdown()
 {
 	if (IsShipSpeedSafe() && IsShipRotationSafe(InitialLandingRotationThreshold))
@@ -324,6 +316,14 @@ bool AShip::IsShipRotationSafe(float RotationThreshold)
 	UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), shipUpAlignment >= RotationThreshold ? TEXT("True") : TEXT("False"));
 
 	return shipUpAlignment >= RotationThreshold;
+}
+
+bool AShip::HasShipStoppedMoving()
+{
+	FVector LinearVelocity = ShipMesh->GetPhysicsLinearVelocity();
+	FVector AngularVelocity = ShipMesh->GetPhysicsAngularVelocityInDegrees();
+
+	return (LinearVelocity.Size() == 0 && AngularVelocity.Size() == 0);
 }
 
 //void AShip::TriggerCrash()
