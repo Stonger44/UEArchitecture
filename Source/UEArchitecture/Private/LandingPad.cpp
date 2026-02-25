@@ -28,34 +28,4 @@ void ALandingPad::Tick(float DeltaTime)
 
 }
 
-void ALandingPad::NotifyHit
-(
-	class UPrimitiveComponent* MyComp,
-	AActor* Other,
-	class UPrimitiveComponent* OtherComp,
-	bool bSelfMoved,
-	FVector HitLocation,
-	FVector HitNormal,
-	FVector NormalImpulse,
-	const FHitResult& Hit
-)
-{
-	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
-	if (!bShipHasLanded && Other && Other != this && Other->IsA(AShip::StaticClass()))
-	{
-		AShip* Ship = Cast<AShip>(Other);
-		if (Ship && Ship->CurrentShipStatus() == EShipStatus::Landed)
-		{
-			bShipHasLanded = true;
-
-			OnShipLanded.Broadcast();
-
-			if (CelebrationEffect)
-			{
-				FVector EffectLocation = GetActorLocation();
-				CelebrationEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), CelebrationEffect, EffectLocation, GetActorRotation());
-			}
-		}
-	}
-}

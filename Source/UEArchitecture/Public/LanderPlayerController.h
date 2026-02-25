@@ -15,6 +15,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowGameOverMenu();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowLevelSuccessMenu();
+
 protected:
 
 

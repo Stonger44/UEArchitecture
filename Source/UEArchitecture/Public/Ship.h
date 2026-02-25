@@ -16,6 +16,7 @@
 class UInputMappingContext;
 class UInputAction;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipLanded);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipDestroyed);
 
 UCLASS()
@@ -50,8 +51,8 @@ public:
 	UPROPERTY()
 	FOnShipDestroyed OnShipDestroyed;
 
-	/*UFUNCTION()
-	void TriggerCrash();*/
+	UPROPERTY()
+	FOnShipLanded OnShipLanded;
 	
 	UFUNCTION()
 	void TriggerExplode(bool ShipExplodedFromCrash);

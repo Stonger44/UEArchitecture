@@ -156,7 +156,6 @@ void AShip::NotifyHit
 		{
 			if (Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
 			{
-				//instead of parameter, save what Player has toucheddown on in variable? clear variable if ship launches off of launchpad?
 				CurrentTouchdownTarget = Other;
 				CheckShipTouchdown();
 			}
@@ -188,7 +187,6 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AShip::Thrust(const FInputActionValue& InputValue)
 {
 	bIsThrusting = InputValue.Get<bool>();
-	// UE_LOG(LogTemp, Warning, TEXT("IsThrusting: %s"), InputValue.Get<bool>() ? TEXT("true") : TEXT("false"))
 
 	if (bIsThrusting && Fuel > 0)
 	{
@@ -199,12 +197,8 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 		}
 
 		const FVector thrust = GetActorUpVector() * ThrustStrength;
-		// UE_LOG(LogTemp, Warning, TEXT("GetActorUpVector Impulse: %s"), *thrust.ToString());
 
 		ShipMesh->AddForce(thrust, NAME_None, true);
-
-		// DrawDebugSphere(GetWorld(), ShipMesh->GetCenterOfMass(), 10, 16, FColor::Green, false, -1, 1, .5);
-
 	}
 }
 
@@ -212,11 +206,9 @@ void AShip::Rotate(const FInputActionValue& InputValue)
 {
 	if (float currentValue = InputValue.Get<float>())
 	{
-		// UE_LOG(LogTemp, Warning, TEXT("Input Value: %f"), currentValue)
 		const FVector torque = FVector(-currentValue, 0, 0) * TorqueStrength;
 
 		ShipMesh->AddTorqueInRadians(torque, NAME_None, true);
-
 	}
 }
 
@@ -326,11 +318,6 @@ bool AShip::HasShipStoppedMoving()
 	return (LinearVelocity.Size() == 0 && AngularVelocity.Size() == 0);
 }
 
-//void AShip::TriggerCrash()
-//{
-//	ShipCrashed();
-//}
-
 void AShip::TriggerExplode(bool ShipExplodedFromCrash)
 {
 	ShipExploded(ShipExplodedFromCrash);
@@ -349,6 +336,8 @@ void AShip::ShipLanded()
 
 	DisableShipControls();
 	bIsThrusting = false;
+
+	OnShipLanded.Broadcast();
 }
 
 void AShip::ShipCrashed()

@@ -24,9 +24,6 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
-	//float MaxFuel;
-
 	UFUNCTION(BlueprintCallable, Category = "Level")
 	float GetMaxFuel() const { return MaxFuel; }
 
@@ -41,23 +38,23 @@ protected:
 	void HandleShipLanded();
 
 	UFUNCTION()
-	void RestartCurrentLevel();
-
-	UFUNCTION()
 	void LoadNextLevel();
 
 	UFUNCTION()
 	void TriggerGameOver();
 
+	UFUNCTION()
+	void TriggerLevelSuccess();
+
 private:
+	UPROPERTY()
+	ALanderPlayerController* LanderPlayerController = nullptr;
+
+	UPROPERTY()
+	AShip* Ship = nullptr;
+
 	FTimerHandle TriggerGameOverTimer;
-	FTimerHandle LevelLoadTimer;
-
-	UPROPERTY()
-	AShip* Ship;
-
-	UPROPERTY()
-	ALandingPad* LandingPad;
+	FTimerHandle TriggerLevelSuccessTimer;
 
 	float MaxFuel;
 

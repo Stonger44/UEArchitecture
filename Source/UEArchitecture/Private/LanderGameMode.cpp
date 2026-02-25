@@ -46,54 +46,43 @@ void ALanderGameMode::BeginPlay()
 		}
 	}
 
-	// Subscribe to OnShipDestroyed Event
+	// Subscribe to Ship Events
 	AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
 	Ship = Cast<AShip>(ShipActor);
 	if (Ship)
 	{
 		Ship->OnShipDestroyed.AddDynamic(this, &ALanderGameMode::HandleShipDestroyed);
+		Ship->OnShipLanded.AddDynamic(this, &ALanderGameMode::HandleShipLanded);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
 	}
 
-	// Subscribe to OnShipLanded Event
-	AActor* LandingPadActor = UGameplayStatics::GetActorOfClass(GetWorld(), ALandingPad::StaticClass());
-	LandingPad = Cast<ALandingPad>(LandingPadActor);
-	if (LandingPad)
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController)
 	{
-		LandingPad->OnShipLanded.AddDynamic(this, &ALanderGameMode::HandleShipLanded);
+		LanderPlayerController = Cast<ALanderPlayerController>(PlayerController);
+		if (LanderPlayerController == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("LanderPlayerController is null!"));
+		}
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No LandingPad found in level!"));
-	}
-
 }
 
 void ALanderGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	// Unsubscribe from OnShipDestroyed Event
+	// Unsubscribe Ship Events
 	if (Ship)
 	{
 		Ship->OnShipDestroyed.RemoveDynamic(this, &ALanderGameMode::HandleShipDestroyed);
+		Ship->OnShipLanded.RemoveDynamic(this, &ALanderGameMode::HandleShipLanded);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No Ship found in level!"));
-	}
-
-	// Unsubscribe from OnShipLanded Event
-	if (LandingPad)
-	{
-		LandingPad->OnShipLanded.RemoveDynamic(this, &ALanderGameMode::HandleShipLanded);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("LanderGameMode: No LandingPad found in level!"));
 	}
 }
 
@@ -120,35 +109,28 @@ int32 ALanderGameMode::GetCurrentLevelID() const
 
 void ALanderGameMode::HandleShipDestroyed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Ship has been destroyed! Restarting level..."));
-
 	GetWorldTimerManager().SetTimer(TriggerGameOverTimer, this, &ALanderGameMode::TriggerGameOver, 2.0f, false);
 }
 
 void ALanderGameMode::HandleShipLanded()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Ship has landed! Loading next level..."));
-
-	GetWorldTimerManager().SetTimer(LevelLoadTimer, this, &ALanderGameMode::LoadNextLevel, 3.0f, false);
+	GetWorldTimerManager().SetTimer(TriggerLevelSuccessTimer, this, &ALanderGameMode::TriggerLevelSuccess, 2.0f, false);
 }
 
 void ALanderGameMode::TriggerGameOver()
 {
-	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (PC)
+	if (LanderPlayerController)
 	{
-		ALanderPlayerController* LPC = Cast<ALanderPlayerController>(PC);
-		if (LPC)
-		{
-			LPC->ShowGameOverMenu();
-		}
+		LanderPlayerController->ShowGameOverMenu();
 	}
 }
 
-void ALanderGameMode::RestartCurrentLevel()
+void ALanderGameMode::TriggerLevelSuccess()
 {
-	FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-	UGameplayStatics::OpenLevel(this, CurrentlevelName);
+	if (LanderPlayerController)
+	{
+		LanderPlayerController->ShowLevelSuccessMenu();
+	}
 }
 
 void ALanderGameMode::LoadNextLevel()
