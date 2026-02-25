@@ -19,6 +19,29 @@ void ALandingPad::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Subscribe to Ship Events
+	AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
+	Ship = Cast<AShip>(ShipActor);
+	if (Ship)
+	{
+		Ship->OnShipLanded.AddDynamic(this, &ALandingPad::HandleShipLanded);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("LandingPad: No Ship found in level!"));
+	}
+}
+
+void ALandingPad::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (Ship)
+	{
+		Ship->OnShipLanded.RemoveDynamic(this, &ALandingPad::HandleShipLanded);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("LandingPad: No Ship found in level!"));
+	}
 }
 
 // Called every frame
@@ -28,4 +51,7 @@ void ALandingPad::Tick(float DeltaTime)
 
 }
 
-
+void ALandingPad::HandleShipLanded()
+{
+	UE_LOG(LogTemp, Warning, TEXT("The ship has successfully landed! Fire the fireworks!!! Landing pad lights are green!"));
+}

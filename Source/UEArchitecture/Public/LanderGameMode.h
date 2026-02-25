@@ -7,7 +7,6 @@
 #include "Engine/DataTable.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Ship.h"
-#include "LandingPad.h"
 #include "LanderGameMode.generated.h"
 
 UCLASS()

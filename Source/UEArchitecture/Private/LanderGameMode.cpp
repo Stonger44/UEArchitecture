@@ -3,7 +3,6 @@
 
 #include "LanderGameMode.h"
 #include "Ship.h"
-#include "LandingPad.h"
 #include "Data/LevelData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraActor.h"
