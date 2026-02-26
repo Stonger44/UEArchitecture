@@ -101,7 +101,7 @@ protected:
 	float MaxLandingEvaluationRotation = 50;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Safety")
-	float MaxLandingSpeed = 300;
+	float MaxLandingSpeed = 200;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Status")
 	EShipStatus ShipStatus = EShipStatus::Ready;
