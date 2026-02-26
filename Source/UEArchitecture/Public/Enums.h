@@ -17,11 +17,10 @@ enum class EShipStatus : uint8
 	Exploded			UMETA(DisplayName = "Exploded")
 };
 
-//UENUM(BlueprintType)
-//enum class EGameState : uint8
-//{
-//	MainMenu    UMETA(DisplayName = "Main Menu"),
-//	Playing     UMETA(DisplayName = "Playing"),
-//	Paused      UMETA(DisplayName = "Paused"),
-//	GameOver    UMETA(DisplayName = "Game Over")
-//};
+UENUM(BlueprintType)
+enum class EEndPlayState : uint8
+{
+	GameOver		UMETA(DisplayName = "GameOver"),
+	LevelSuccess	UMETA(DisplayName = "LevelSuccess"),
+	GameComplete    UMETA(DisplayName = "GameComplete")
+};

@@ -30,6 +30,9 @@ protected:
 	UPROPERTY()
 	UDataTable* LevelDataTable;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game State")
+	EEndPlayState EndPlayState;
+
 	UFUNCTION()
 	void HandleShipDestroyed();
 
@@ -40,10 +43,7 @@ protected:
 	void LoadNextLevel();
 
 	UFUNCTION()
-	void TriggerGameOver();
-
-	UFUNCTION()
-	void TriggerLevelSuccess();
+	void TriggerEndPlayState();
 
 private:
 	UPROPERTY()
@@ -52,8 +52,7 @@ private:
 	UPROPERTY()
 	AShip* Ship = nullptr;
 
-	FTimerHandle TriggerGameOverTimer;
-	FTimerHandle TriggerLevelSuccessTimer;
+	FTimerHandle TriggerEndPlayTimer;
 
 	float MaxFuel;
 

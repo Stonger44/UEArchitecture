@@ -108,27 +108,21 @@ int32 ALanderGameMode::GetCurrentLevelID() const
 
 void ALanderGameMode::HandleShipDestroyed()
 {
-	GetWorldTimerManager().SetTimer(TriggerGameOverTimer, this, &ALanderGameMode::TriggerGameOver, 2.0f, false);
+	EndPlayState = EEndPlayState::GameOver;
+	GetWorldTimerManager().SetTimer(TriggerEndPlayTimer, this, &ALanderGameMode::TriggerEndPlayState, 2.0f, false);
 }
 
 void ALanderGameMode::HandleShipLanded()
 {
-	GetWorldTimerManager().SetTimer(TriggerLevelSuccessTimer, this, &ALanderGameMode::TriggerLevelSuccess, 2.0f, false);
+	EndPlayState = EEndPlayState::LevelSuccess;
+	GetWorldTimerManager().SetTimer(TriggerEndPlayTimer, this, &ALanderGameMode::TriggerEndPlayState, 2.0f, false);
 }
 
-void ALanderGameMode::TriggerGameOver()
+void ALanderGameMode::TriggerEndPlayState()
 {
 	if (LanderPlayerController)
 	{
-		LanderPlayerController->ShowGameOverMenu();
-	}
-}
-
-void ALanderGameMode::TriggerLevelSuccess()
-{
-	if (LanderPlayerController)
-	{
-		LanderPlayerController->ShowLevelSuccessMenu();
+		LanderPlayerController->ShowEndPlayMenu(EndPlayState);
 	}
 }
 

@@ -13,10 +13,7 @@ class UEARCHITECTURE_API ALanderPlayerController : public APlayerController
 	
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-	void ShowGameOverMenu();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void ShowLevelSuccessMenu();
+	void ShowEndPlayMenu(EEndPlayState EndPlayState);
 
 protected:
 
