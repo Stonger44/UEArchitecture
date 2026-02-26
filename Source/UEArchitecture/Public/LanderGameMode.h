@@ -39,8 +39,14 @@ protected:
 	UFUNCTION()
 	void HandleShipLanded();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
+	void RestartCurrentLevel();
+
+	UFUNCTION(BlueprintCallable)
 	void LoadNextLevel();
+
+	UFUNCTION(BlueprintCallable)
+	void QuitGame();
 
 	UFUNCTION()
 	void TriggerEndPlayState();

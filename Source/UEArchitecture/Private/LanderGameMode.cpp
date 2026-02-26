@@ -106,30 +106,15 @@ int32 ALanderGameMode::GetCurrentLevelID() const
 	return -1;
 }
 
-void ALanderGameMode::HandleShipDestroyed()
+void ALanderGameMode::RestartCurrentLevel()
 {
-	EndPlayState = EEndPlayState::GameOver;
-	GetWorldTimerManager().SetTimer(TriggerEndPlayTimer, this, &ALanderGameMode::TriggerEndPlayState, 2.0f, false);
-}
 
-void ALanderGameMode::HandleShipLanded()
-{
-	EndPlayState = EEndPlayState::LevelSuccess;
-	GetWorldTimerManager().SetTimer(TriggerEndPlayTimer, this, &ALanderGameMode::TriggerEndPlayState, 2.0f, false);
-}
-
-void ALanderGameMode::TriggerEndPlayState()
-{
-	if (LanderPlayerController)
-	{
-		LanderPlayerController->ShowEndPlayMenu(EndPlayState);
-	}
 }
 
 void ALanderGameMode::LoadNextLevel()
 {
 	int32 CurrentLevelID = GetCurrentLevelID();
-	
+
 	if (CurrentLevelID < 0)
 	{
 		return;
@@ -151,4 +136,29 @@ void ALanderGameMode::LoadNextLevel()
 
 	// Last Level completed, no other Levels
 	UE_LOG(LogTemp, Warning, TEXT("Congratulations! You've beaten the game!"))
+}
+
+void ALanderGameMode::QuitGame()
+{
+
+}
+
+void ALanderGameMode::HandleShipDestroyed()
+{
+	EndPlayState = EEndPlayState::GameOver;
+	GetWorldTimerManager().SetTimer(TriggerEndPlayTimer, this, &ALanderGameMode::TriggerEndPlayState, 2.0f, false);
+}
+
+void ALanderGameMode::HandleShipLanded()
+{
+	EndPlayState = EEndPlayState::LevelSuccess;
+	GetWorldTimerManager().SetTimer(TriggerEndPlayTimer, this, &ALanderGameMode::TriggerEndPlayState, 2.0f, false);
+}
+
+void ALanderGameMode::TriggerEndPlayState()
+{
+	if (LanderPlayerController)
+	{
+		LanderPlayerController->ShowEndPlayMenu(EndPlayState);
+	}
 }
