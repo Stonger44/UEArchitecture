@@ -63,6 +63,7 @@ void UFuelPickup::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 	{
 		FRotator NewRotation = Pivot->GetRelativeRotation();
 		NewRotation.Roll += RotationSpeed * DeltaTime;
+		// NewRotation.Yaw += RotationSpeed * DeltaTime;
 		Pivot->SetRelativeRotation(NewRotation);
 	}
 }

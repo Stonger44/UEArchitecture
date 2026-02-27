@@ -108,7 +108,8 @@ int32 ALanderGameMode::GetCurrentLevelID() const
 
 void ALanderGameMode::RestartCurrentLevel()
 {
-
+	FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+	UGameplayStatics::OpenLevel(this, CurrentlevelName);
 }
 
 void ALanderGameMode::LoadNextLevel()
@@ -138,20 +139,25 @@ void ALanderGameMode::LoadNextLevel()
 	UE_LOG(LogTemp, Warning, TEXT("Congratulations! You've beaten the game!"))
 }
 
-void ALanderGameMode::QuitGame()
+void ALanderGameMode::LoadMainMenu()
 {
-
+	UGameplayStatics::OpenLevel(this, "MainMenu");
 }
 
 void ALanderGameMode::HandleShipDestroyed()
 {
 	EndPlayState = EEndPlayState::GameOver;
-	GetWorldTimerManager().SetTimer(TriggerEndPlayTimer, this, &ALanderGameMode::TriggerEndPlayState, 2.0f, false);
+	SetEndPlayTimer();
 }
 
 void ALanderGameMode::HandleShipLanded()
 {
 	EndPlayState = EEndPlayState::LevelSuccess;
+	SetEndPlayTimer();
+}
+
+void ALanderGameMode::SetEndPlayTimer()
+{
 	GetWorldTimerManager().SetTimer(TriggerEndPlayTimer, this, &ALanderGameMode::TriggerEndPlayState, 2.0f, false);
 }
 

@@ -46,7 +46,10 @@ protected:
 	void LoadNextLevel();
 
 	UFUNCTION(BlueprintCallable)
-	void QuitGame();
+	void LoadMainMenu();
+
+	UFUNCTION()
+	void SetEndPlayTimer();
 
 	UFUNCTION()
 	void TriggerEndPlayState();
