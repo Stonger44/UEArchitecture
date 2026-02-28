@@ -66,4 +66,6 @@ private:
 	float MaxFuel;
 
 	int32 GetCurrentLevelID() const;
+
+	bool IsLastLevel() const;
 };

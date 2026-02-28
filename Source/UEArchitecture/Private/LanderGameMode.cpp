@@ -106,6 +106,23 @@ int32 ALanderGameMode::GetCurrentLevelID() const
 	return -1;
 }
 
+bool ALanderGameMode::IsLastLevel() const
+{
+	int32 CurrentLevelID = GetCurrentLevelID();
+	int32 MaxLevelID = 0;
+
+	for (const auto& i : LevelDataTable->GetRowMap())
+	{
+		const FLevelData* Row = reinterpret_cast<const FLevelData*>(i.Value);
+		if (Row && Row->LevelID > MaxLevelID)
+		{
+			MaxLevelID = Row->LevelID;
+		}
+	}
+
+	return (CurrentLevelID == MaxLevelID);
+}
+
 void ALanderGameMode::RestartCurrentLevel()
 {
 	FName CurrentlevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
@@ -134,9 +151,6 @@ void ALanderGameMode::LoadNextLevel()
 			return;
 		}
 	}
-
-	// Last Level completed, no other Levels
-	UE_LOG(LogTemp, Warning, TEXT("Congratulations! You've beaten the game!"))
 }
 
 void ALanderGameMode::LoadMainMenu()
@@ -152,7 +166,7 @@ void ALanderGameMode::HandleShipDestroyed()
 
 void ALanderGameMode::HandleShipLanded()
 {
-	EndPlayState = EEndPlayState::LevelSuccess;
+	EndPlayState = IsLastLevel() ? EEndPlayState::GameComplete : EEndPlayState::LevelSuccess;
 	SetEndPlayTimer();
 }
 

@@ -61,7 +61,7 @@ public:
 	void AddFuel(float FuelToAdd);
 
 	UFUNCTION(BlueprintCallable)
-	float GetFuelPercent();
+	float GetFuelPercent() const;
 
 protected:
 	// Called when the game starts or when spawned
@@ -143,8 +143,8 @@ protected:
 	void Rotate(const FInputActionValue& inputValue);
 
 	void CheckShipTouchdown();
-	bool IsShipRotationSafe(float RotationThreshold);
-	bool IsShipSpeedSafe();
+	bool IsShipRotationSafe(float RotationThreshold) const;
+	bool IsShipSpeedSafe() const;
 
 	void ShipReady();
 	void ShipLanded();
@@ -155,7 +155,7 @@ protected:
 
 	void CheckFuel(float DeltaTime);
 
-	bool HasShipStoppedMoving();
+	bool HasShipStoppedMoving() const;
 
 	void RefillFuelTimer();
 

@@ -266,7 +266,7 @@ void AShip::RefillFuelTimer()
 	}
 }
 
-float AShip::GetFuelPercent()
+float AShip::GetFuelPercent() const
 {
 	return Fuel / MaxFuel;
 }
@@ -284,7 +284,7 @@ void AShip::CheckShipTouchdown()
 	}
 }
 
-bool AShip::IsShipSpeedSafe()
+bool AShip::IsShipSpeedSafe() const
 {
 	float shipSpeed = this->GetVelocity().Length();
 
@@ -295,7 +295,7 @@ bool AShip::IsShipSpeedSafe()
 	return shipSpeed <= MaxLandingSpeed;
 }
 
-bool AShip::IsShipRotationSafe(float RotationThreshold)
+bool AShip::IsShipRotationSafe(float RotationThreshold) const
 {
 	FVector shipUpVector = this->GetActorUpVector();
 
@@ -310,7 +310,7 @@ bool AShip::IsShipRotationSafe(float RotationThreshold)
 	return shipUpAlignment >= RotationThreshold;
 }
 
-bool AShip::HasShipStoppedMoving()
+bool AShip::HasShipStoppedMoving() const
 {
 	FVector LinearVelocity = ShipMesh->GetPhysicsLinearVelocity();
 	FVector AngularVelocity = ShipMesh->GetPhysicsAngularVelocityInDegrees();
