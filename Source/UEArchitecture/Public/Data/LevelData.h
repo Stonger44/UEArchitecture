@@ -15,6 +15,9 @@ struct FLevelData : public FTableRowBase
 	FName LevelName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText LevelTitle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxFuel;
 
 };

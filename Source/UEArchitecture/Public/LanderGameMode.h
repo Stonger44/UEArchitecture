@@ -26,6 +26,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Level")
 	float GetMaxFuel() const { return MaxFuel; }
 
+	UFUNCTION(BlueprintCallable, Category = "Level")
+	FText GetLevelTitle() const { return LevelTitle; }
+
+	UFUNCTION(BlueprintCallable)
+	void RestartCurrentLevel();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadNextLevel();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadMainMenu();
+
 protected:
 	UPROPERTY()
 	UDataTable* LevelDataTable;
@@ -38,15 +50,6 @@ protected:
 
 	UFUNCTION()
 	void HandleShipLanded();
-
-	UFUNCTION(BlueprintCallable)
-	void RestartCurrentLevel();
-
-	UFUNCTION(BlueprintCallable)
-	void LoadNextLevel();
-
-	UFUNCTION(BlueprintCallable)
-	void LoadMainMenu();
 
 	UFUNCTION()
 	void SetEndPlayTimer();
@@ -64,6 +67,8 @@ private:
 	FTimerHandle TriggerEndPlayTimer;
 
 	float MaxFuel;
+
+	FText LevelTitle;
 
 	int32 GetCurrentLevelID() const;
 
