@@ -123,7 +123,16 @@ void AShip::Tick(float DeltaTime)
 					
 					if (CurrentTouchdownTarget->IsA(ALandingPad::StaticClass()))
 					{
-						ShipLanded();
+						if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
+						{
+							GetWorldTimerManager().SetTimer(
+								LandingEvaluationTimer,
+								this,
+								&AShip::ShipLanded,
+								3.0f,
+								false
+							);
+						}
 					}
 				}
 				
@@ -332,12 +341,12 @@ void AShip::ShipReady()
 void AShip::ShipLanded()
 {
 	ShipStatus = EShipStatus::Landed;
-	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
 
 	DisableShipControls();
 	bIsThrusting = false;
 
 	OnShipLanded.Broadcast();
+	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
 }
 
 void AShip::ShipCrashed()

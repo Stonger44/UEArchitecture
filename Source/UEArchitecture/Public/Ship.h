@@ -142,6 +142,25 @@ protected:
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
 
+private:
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* Camera;
+
+	UPROPERTY()
+	ALanderPlayerController* LanderPlayerController;
+
+	UPROPERTY()
+	AActor* CurrentTouchdownTarget = nullptr;
+
+	float InitialLandingRotationThreshold;
+	float LandingEvaluationRotationThreshold;
+
+	FTimerHandle FuelRefillTimer;
+	FTimerHandle LandingEvaluationTimer;
+
 	void CheckShipTouchdown();
 	bool IsShipRotationSafe(float RotationThreshold) const;
 	bool IsShipSpeedSafe() const;
@@ -162,23 +181,4 @@ protected:
 	void SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystemToSpawn, FVector LocationOffset = FVector::ZeroVector);
 
 	void ShakeCamera();
-
-private:
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* CameraBoom;
-
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* Camera;
-
-	UPROPERTY()
-	ALanderPlayerController* LanderPlayerController;
-
-	UPROPERTY()
-	AActor* CurrentTouchdownTarget = nullptr;
-
-	float InitialLandingRotationThreshold;
-	float LandingEvaluationRotationThreshold;
-
-	FTimerHandle FuelRefillTimer;
-	FTimerHandle LandingEvaluationTimer;
 };
