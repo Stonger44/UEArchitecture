@@ -73,10 +73,22 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Graphics")
 	UStaticMeshComponent* VisualMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
+	USceneComponent* Thrusters;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
+	UNiagaraComponent* Thruster1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
+	UNiagaraComponent* Thruster2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
+	UNiagaraComponent* Thruster3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Fire")
 	USceneComponent* FireSmokeTrailPivot;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Fire")
 	UNiagaraComponent* FireSmokeTrail;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
@@ -124,19 +136,19 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
 	bool bIsThrusting = false;
 
-	UPROPERTY(EditAnywhere, Category = "Ship | VFX")
+	UPROPERTY(EditAnywhere, Category = "Ship | VFX | Explosions")
 	TSubclassOf<UCameraShakeBase> ExplosionShake;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Explosions")
 	UNiagaraSystem* NS_ExplosionBig;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Explosions")
 	UNiagaraSystem* NS_ExplosionSmall;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX | Explosions")
 	USoundCue* SC_ExplosionBig;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX | Explosions")
 	USoundCue* SC_ExplosionSmall;
 
 	void Thrust(const FInputActionValue& inputValue);

@@ -32,6 +32,11 @@ AShip::AShip()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 
+	Thrusters = CreateDefaultSubobject<USceneComponent>(TEXT("Thrusters"));
+	Thrusters->SetupAttachment(ShipMesh);
+
+	// Add Niagara Component Thrusters 1-3
+
 	FireSmokeTrailPivot = CreateDefaultSubobject<USceneComponent>(TEXT("FireSmokeTrailPivot"));
 	FireSmokeTrailPivot->SetupAttachment(ShipMesh);
 	FireSmokeTrailPivot->SetRelativeLocation(FVector(-200.f, -50.f, 100.f));
