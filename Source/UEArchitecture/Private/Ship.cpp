@@ -35,7 +35,15 @@ AShip::AShip()
 	Thrusters = CreateDefaultSubobject<USceneComponent>(TEXT("Thrusters"));
 	Thrusters->SetupAttachment(ShipMesh);
 
-	// Add Niagara Component Thrusters 1-3
+	Thruster1 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Thruster1"));
+	Thruster1->SetupAttachment(Thrusters);
+
+	Thruster2 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Thruster2"));
+	Thruster2->SetupAttachment(Thrusters);
+
+	Thruster3 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Thruster3"));
+	Thruster3->SetupAttachment(Thrusters);
+
 
 	FireSmokeTrailPivot = CreateDefaultSubobject<USceneComponent>(TEXT("FireSmokeTrailPivot"));
 	FireSmokeTrailPivot->SetupAttachment(ShipMesh);
