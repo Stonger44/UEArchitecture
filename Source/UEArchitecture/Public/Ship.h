@@ -167,6 +167,8 @@ private:
 	UPROPERTY()
 	AActor* CurrentTouchdownTarget = nullptr;
 
+	TArray<UNiagaraComponent*> ThrusterArray;
+
 	float InitialLandingRotationThreshold;
 	float LandingEvaluationRotationThreshold;
 
@@ -193,4 +195,6 @@ private:
 	void SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystemToSpawn, FVector LocationOffset = FVector::ZeroVector);
 
 	void ShakeCamera();
+
+	void ShowThrusterVisuals(bool ShowThrusters);
 };

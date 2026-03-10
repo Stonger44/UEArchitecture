@@ -37,13 +37,19 @@ AShip::AShip()
 
 	Thruster1 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Thruster1"));
 	Thruster1->SetupAttachment(Thrusters);
+	Thruster1->bAutoActivate = false;
 
 	Thruster2 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Thruster2"));
 	Thruster2->SetupAttachment(Thrusters);
+	Thruster2->bAutoActivate = false;
 
 	Thruster3 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Thruster3"));
 	Thruster3->SetupAttachment(Thrusters);
+	Thruster3->bAutoActivate = false;
 
+	ThrusterArray.Add(Thruster1);
+	ThrusterArray.Add(Thruster2);
+	ThrusterArray.Add(Thruster3);
 
 	FireSmokeTrailPivot = CreateDefaultSubobject<USceneComponent>(TEXT("FireSmokeTrailPivot"));
 	FireSmokeTrailPivot->SetupAttachment(ShipMesh);
@@ -210,7 +216,8 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 {
 	bIsThrusting = InputValue.Get<bool>();
 
-	if (bIsThrusting && Fuel > 0)
+	bool canThrust = bIsThrusting && Fuel > 0;
+	if (canThrust)
 	{
 		if (ShipStatus == EShipStatus::Ready || ShipStatus == EShipStatus::LandingEvaluation)
 		{
@@ -218,9 +225,15 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 			CurrentTouchdownTarget = nullptr;
 		}
 
+		ShowThrusterVisuals(canThrust);
+
 		const FVector thrust = GetActorUpVector() * ThrustStrength;
 
 		ShipMesh->AddForce(thrust, NAME_None, true);
+	}
+	else
+	{
+		ShowThrusterVisuals(canThrust);
 	}
 }
 
@@ -234,6 +247,21 @@ void AShip::Rotate(const FInputActionValue& InputValue)
 	}
 }
 
+void AShip::ShowThrusterVisuals(bool ShowThrusters)
+{
+	for (auto* Thruster : ThrusterArray)
+	{
+		if (ShowThrusters)
+		{
+			Thruster->Activate();
+		}
+		else
+		{
+			Thruster->Deactivate();
+		}
+	}
+}
+
 void AShip::CheckFuel(float DeltaTime)
 {
 	if (bIsThrusting)
@@ -244,6 +272,7 @@ void AShip::CheckFuel(float DeltaTime)
 		{
 			Fuel = 0;
 			bIsThrusting = false;
+			ShowThrusterVisuals(bIsThrusting);
 		}
 	}
 
@@ -357,6 +386,7 @@ void AShip::ShipLanded()
 
 	DisableShipControls();
 	bIsThrusting = false;
+	ShowThrusterVisuals(bIsThrusting);
 
 	OnShipLanded.Broadcast();
 	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
@@ -369,6 +399,7 @@ void AShip::ShipCrashed()
 
 	DisableShipControls();
 	bIsThrusting = false;
+	ShowThrusterVisuals(bIsThrusting);
 
 	// Create explosion
 	SpawnNiagaraSystem(NS_ExplosionSmall);
@@ -393,6 +424,7 @@ void AShip::ShipExploded(bool ShipExplodedFromCrash)
 
 	DisableShipControls();
 	bIsThrusting = false;
+	ShowThrusterVisuals(bIsThrusting);
 
 	// Create explosion
 	SpawnNiagaraSystem(NS_ExplosionBig);
