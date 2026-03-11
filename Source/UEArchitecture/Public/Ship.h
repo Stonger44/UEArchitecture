@@ -9,6 +9,7 @@
 #include "Camera/CameraComponent.h"
 #include "InputActionValue.h"
 #include "NiagaraComponent.h"
+#include "Components/AudioComponent.h"
 #include "Sound/SoundCue.h"
 #include "LanderPlayerController.h"
 #include "Ship.generated.h"
@@ -73,24 +74,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Graphics")
 	UStaticMeshComponent* VisualMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
-	USceneComponent* Thrusters;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
-	UNiagaraComponent* Thruster1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
-	UNiagaraComponent* Thruster2;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
-	UNiagaraComponent* Thruster3;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Fire")
-	USceneComponent* FireSmokeTrailPivot;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Fire")
-	UNiagaraComponent* FireSmokeTrail;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
 	float ThrustStrength = 3000;
 
@@ -136,8 +119,23 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ship | Fuel")
 	bool bIsThrusting = false;
 
-	UPROPERTY(EditAnywhere, Category = "Ship | VFX | Explosions")
-	TSubclassOf<UCameraShakeBase> ExplosionShake;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
+	USceneComponent* Thrusters;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
+	UNiagaraComponent* Thruster1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
+	UNiagaraComponent* Thruster2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Thrusters")
+	UNiagaraComponent* Thruster3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Fire")
+	USceneComponent* FireSmokeTrailPivot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Fire")
+	UNiagaraComponent* FireSmokeTrail;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Explosions")
 	UNiagaraSystem* NS_ExplosionBig;
@@ -145,11 +143,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | VFX | Explosions")
 	UNiagaraSystem* NS_ExplosionSmall;
 
+	UPROPERTY(EditAnywhere, Category = "Ship | VFX | Explosions")
+	TSubclassOf<UCameraShakeBase> ExplosionShake;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX | Explosions")
 	USoundCue* SC_ExplosionBig;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX | Explosions")
 	USoundCue* SC_ExplosionSmall;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX | Thrusters")
+	UAudioComponent* ThrusterAudio;
 
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
@@ -196,5 +200,5 @@ private:
 
 	void ShakeCamera();
 
-	void ShowThrusterVisuals(bool ShowThrusters);
+	void ActivateThrusterEffects(bool ActivateThrusters);
 };

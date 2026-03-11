@@ -35,6 +35,10 @@ AShip::AShip()
 	Thrusters = CreateDefaultSubobject<USceneComponent>(TEXT("Thrusters"));
 	Thrusters->SetupAttachment(ShipMesh);
 
+	ThrusterAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("ThrusterAudio"));
+	ThrusterAudio->SetupAttachment(Thrusters);
+	ThrusterAudio->bAutoActivate = false;
+
 	Thruster1 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Thruster1"));
 	Thruster1->SetupAttachment(Thrusters);
 	Thruster1->bAutoActivate = false;
@@ -225,7 +229,7 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 			CurrentTouchdownTarget = nullptr;
 		}
 
-		ShowThrusterVisuals(canThrust);
+		ActivateThrusterEffects(canThrust);
 
 		const FVector thrust = GetActorUpVector() * ThrustStrength;
 
@@ -233,7 +237,7 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 	}
 	else
 	{
-		ShowThrusterVisuals(canThrust);
+		ActivateThrusterEffects(canThrust);
 	}
 }
 
@@ -247,19 +251,13 @@ void AShip::Rotate(const FInputActionValue& InputValue)
 	}
 }
 
-void AShip::ShowThrusterVisuals(bool ShowThrusters)
+void AShip::ActivateThrusterEffects(bool ShowThrusters)
 {
 	for (auto* Thruster : ThrusterArray)
 	{
-		if (ShowThrusters)
-		{
-			Thruster->Activate();
-		}
-		else
-		{
-			Thruster->Deactivate();
-		}
+		Thruster->SetActive(ShowThrusters);
 	}
+	ThrusterAudio->SetActive(ShowThrusters);
 }
 
 void AShip::CheckFuel(float DeltaTime)
@@ -272,7 +270,7 @@ void AShip::CheckFuel(float DeltaTime)
 		{
 			Fuel = 0;
 			bIsThrusting = false;
-			ShowThrusterVisuals(bIsThrusting);
+			ActivateThrusterEffects(bIsThrusting);
 		}
 	}
 
@@ -386,7 +384,7 @@ void AShip::ShipLanded()
 
 	DisableShipControls();
 	bIsThrusting = false;
-	ShowThrusterVisuals(bIsThrusting);
+	ActivateThrusterEffects(bIsThrusting);
 
 	OnShipLanded.Broadcast();
 	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
@@ -399,7 +397,7 @@ void AShip::ShipCrashed()
 
 	DisableShipControls();
 	bIsThrusting = false;
-	ShowThrusterVisuals(bIsThrusting);
+	ActivateThrusterEffects(bIsThrusting);
 
 	// Create explosion
 	SpawnNiagaraSystem(NS_ExplosionSmall);
@@ -424,7 +422,7 @@ void AShip::ShipExploded(bool ShipExplodedFromCrash)
 
 	DisableShipControls();
 	bIsThrusting = false;
-	ShowThrusterVisuals(bIsThrusting);
+	ActivateThrusterEffects(bIsThrusting);
 
 	// Create explosion
 	SpawnNiagaraSystem(NS_ExplosionBig);
