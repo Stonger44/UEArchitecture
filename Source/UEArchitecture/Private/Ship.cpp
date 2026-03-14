@@ -143,19 +143,19 @@ void AShip::Tick(float DeltaTime)
 						ShipReady();
 					}
 					
-					if (CurrentTouchdownTarget->IsA(ALandingPad::StaticClass()))
-					{
-						if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
-						{
-							GetWorldTimerManager().SetTimer(
-								LandingEvaluationTimer,
-								this,
-								&AShip::ShipLanded,
-								3.0f,
-								false
-							);
-						}
-					}
+					//if (CurrentTouchdownTarget->IsA(ALandingPad::StaticClass()))
+					//{
+					//	if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
+					//	{
+					//		GetWorldTimerManager().SetTimer(
+					//			LandingEvaluationTimer,
+					//			this,
+					//			&AShip::ShipLanded,
+					//			3.0f,
+					//			false
+					//		);
+					//	}
+					//}
 
 					if (CurrentTouchdownTarget->IsA(APad::StaticClass()))
 					{
@@ -200,7 +200,7 @@ void AShip::NotifyHit
 		if (Other && Other != this)
 		{
 			//if (Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
-			if (Other->IsA(APad::StaticClass()))
+			if (Other->IsA(APad::StaticClass()) || Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
 			{
 				CurrentTouchdownTarget = Cast<APad>(Other);
 				CheckShipTouchdown();

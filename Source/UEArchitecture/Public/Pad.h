@@ -45,6 +45,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
 	UPointLightComponent* PadLight4;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
+	FLinearColor White = FLinearColor(1.0f, 1.0f, 1.0f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
+	FLinearColor Red = FLinearColor(1.0f, 0, 0);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
+	FLinearColor Green = FLinearColor(0, 1.0f, 0);
+
 	UFUNCTION()
 	void HandleShipLanded(APad* CurrentTouchdownPad);
 

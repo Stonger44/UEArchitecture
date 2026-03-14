@@ -31,11 +31,6 @@ APad::APad()
 
 	PadLight4 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PadLight4"));
 	PadLight4->SetupAttachment(PadLights);
-
-	PadLightArray.Add(PadLight1);
-	PadLightArray.Add(PadLight2);
-	PadLightArray.Add(PadLight3);
-	PadLightArray.Add(PadLight4);
 }
 
 // Called when the game starts or when spawned
@@ -53,6 +48,17 @@ void APad::BeginPlay()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Pad: No Ship found in level!"));
+	}
+
+	PadLightArray.Add(PadLight1);
+	PadLightArray.Add(PadLight2);
+	PadLightArray.Add(PadLight3);
+	PadLightArray.Add(PadLight4);
+
+	for (auto* Light : PadLightArray)
+	{
+		Light->SetIntensity(100000.0f);
+		Light->SetLightColor(White);
 	}
 }
 
@@ -78,5 +84,10 @@ void APad::Tick(float DeltaTime)
 
 void APad::HandleShipLanded(APad* CurrentTouchdownPad)
 {
+	for (auto* Light : PadLightArray)
+	{
+		Light->SetLightColor(Green);
+	}
+
 	UE_LOG(LogTemp, Warning, TEXT("Ship landed on: %s"), *CurrentTouchdownPad->GetName());
 }
