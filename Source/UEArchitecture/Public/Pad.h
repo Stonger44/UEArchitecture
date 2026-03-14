@@ -7,6 +7,8 @@
 #include "Components/PointLightComponent.h"
 #include "Pad.generated.h"
 
+class AShip;
+
 UCLASS()
 class UEARCHITECTURE_API APad : public AActor
 {
@@ -19,6 +21,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* DefaultSceneRoot;
@@ -41,8 +45,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
 	UPointLightComponent* PadLight4;
 
-public:	
+	UFUNCTION()
+	void HandleShipLanded(APad* CurrentTouchdownPad);
+
+private:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY()
+	TArray<UPointLightComponent*> PadLightArray;
+
+	UPROPERTY()
+	AShip* Ship = nullptr;
 };

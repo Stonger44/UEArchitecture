@@ -49,7 +49,7 @@ protected:
 	void HandleShipDestroyed();
 
 	UFUNCTION()
-	void HandleShipLanded();
+	void HandleShipLanded(APad* CurrentTouchdownPad);
 
 	UFUNCTION()
 	void SetEndPlayTimer();

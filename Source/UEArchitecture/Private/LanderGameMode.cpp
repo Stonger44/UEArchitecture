@@ -165,7 +165,7 @@ void ALanderGameMode::HandleShipDestroyed()
 	SetEndPlayTimer();
 }
 
-void ALanderGameMode::HandleShipLanded()
+void ALanderGameMode::HandleShipLanded(APad* CurrentTouchdownPad)
 {
 	EndPlayState = IsLastLevel() ? EEndPlayState::GameComplete : EEndPlayState::LevelSuccess;
 	SetEndPlayTimer();

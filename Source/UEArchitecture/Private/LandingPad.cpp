@@ -51,7 +51,7 @@ void ALandingPad::Tick(float DeltaTime)
 
 }
 
-void ALandingPad::HandleShipLanded()
+void ALandingPad::HandleShipLanded(APad* CurrentTouchdownPad)
 {
 	UE_LOG(LogTemp, Warning, TEXT("The ship has successfully landed! Fire the fireworks!!! Landing pad lights are green!"));
 }

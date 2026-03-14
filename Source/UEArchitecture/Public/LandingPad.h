@@ -30,7 +30,7 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UFUNCTION()
-	void HandleShipLanded();
+	void HandleShipLanded(APad* CurrentTouchdownPad);
 
 private:
 	UPROPERTY()

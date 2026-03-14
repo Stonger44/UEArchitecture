@@ -4,6 +4,7 @@
 #include "Ship.h"
 #include "LandingPad.h"
 #include "LaunchPad.h"
+#include "Pad.h"
 #include "LanderGameMode.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -155,6 +156,20 @@ void AShip::Tick(float DeltaTime)
 							);
 						}
 					}
+
+					if (CurrentTouchdownTarget->IsA(APad::StaticClass()))
+					{
+						if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
+						{
+							GetWorldTimerManager().SetTimer(
+								LandingEvaluationTimer,
+								this,
+								&AShip::ShipLanded,
+								3.0f,
+								false
+							);
+						}
+					}
 				}
 				
 			}
@@ -184,9 +199,10 @@ void AShip::NotifyHit
 	{
 		if (Other && Other != this)
 		{
-			if (Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
+			//if (Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
+			if (Other->IsA(APad::StaticClass()))
 			{
-				CurrentTouchdownTarget = Other;
+				CurrentTouchdownTarget = Cast<APad>(Other);
 				CheckShipTouchdown();
 			}
 			else
@@ -348,11 +364,11 @@ bool AShip::IsShipRotationSafe(float RotationThreshold) const
 
 	// DotProduct for ship alignment
 	float shipUpAlignment = FVector::DotProduct(shipUpVector, FVector::UpVector);
-	UE_LOG(LogTemp, Warning, TEXT("Ship Up Alignment: %f"), shipUpAlignment);
+	// UE_LOG(LogTemp, Warning, TEXT("Ship Up Alignment: %f"), shipUpAlignment);
 
 	// Compare ship alignment with threshold
-	UE_LOG(LogTemp, Warning, TEXT("Rotation Threshold: %f"), RotationThreshold);
-	UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), shipUpAlignment >= RotationThreshold ? TEXT("True") : TEXT("False"));
+	// UE_LOG(LogTemp, Warning, TEXT("Rotation Threshold: %f"), RotationThreshold);
+	// UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), shipUpAlignment >= RotationThreshold ? TEXT("True") : TEXT("False"));
 
 	return shipUpAlignment >= RotationThreshold;
 }
@@ -384,8 +400,8 @@ void AShip::ShipLanded()
 	bIsThrusting = false;
 	ActivateThrusterEffects(bIsThrusting);
 
-	OnShipLanded.Broadcast();
-	UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
+	OnShipLanded.Broadcast(CurrentTouchdownTarget);
+	// UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
 }
 
 void AShip::ShipCrashed()

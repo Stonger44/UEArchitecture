@@ -2,6 +2,8 @@
 
 
 #include "Pad.h"
+#include "Ship.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APad::APad()
@@ -29,13 +31,42 @@ APad::APad()
 
 	PadLight4 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PadLight4"));
 	PadLight4->SetupAttachment(PadLights);
+
+	PadLightArray.Add(PadLight1);
+	PadLightArray.Add(PadLight2);
+	PadLightArray.Add(PadLight3);
+	PadLightArray.Add(PadLight4);
 }
 
 // Called when the game starts or when spawned
 void APad::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// Subscribe to Ship Events
+	AActor* ShipActor = UGameplayStatics::GetActorOfClass(GetWorld(), AShip::StaticClass());
+	Ship = Cast<AShip>(ShipActor);
+	if (Ship)
+	{
+		Ship->OnShipLanded.AddDynamic(this, &APad::HandleShipLanded);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Pad: No Ship found in level!"));
+	}
+}
+
+void APad::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	// Unsubscribe from Ship Events
+	if (Ship)
+	{
+		Ship->OnShipLanded.RemoveDynamic(this, &APad::HandleShipLanded);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Pad: No Ship found in level!"));
+	}
 }
 
 // Called every frame
@@ -45,3 +76,7 @@ void APad::Tick(float DeltaTime)
 
 }
 
+void APad::HandleShipLanded(APad* CurrentTouchdownPad)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Ship landed on: %s"), *CurrentTouchdownPad->GetName());
+}

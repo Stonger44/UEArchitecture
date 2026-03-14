@@ -16,8 +16,11 @@
 
 class UInputMappingContext;
 class UInputAction;
+class APad;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipLanded);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipLanded);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShipLanded, APad*, Pad);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipDestroyed);
 
 UCLASS()
@@ -169,8 +172,9 @@ private:
 	ALanderPlayerController* LanderPlayerController;
 
 	UPROPERTY()
-	AActor* CurrentTouchdownTarget = nullptr;
+	APad* CurrentTouchdownTarget = nullptr;
 
+	UPROPERTY()
 	TArray<UNiagaraComponent*> ThrusterArray;
 
 	float InitialLandingRotationThreshold;
