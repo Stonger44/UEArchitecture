@@ -18,9 +18,10 @@ class UInputMappingContext;
 class UInputAction;
 class APad;
 
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipLanded);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipReady);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipLaunched);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShipLandingEvaluation, APad*, Pad);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShipLanded, APad*, Pad);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipDestroyed);
 
 UCLASS()
@@ -53,11 +54,20 @@ public:
 	EShipStatus CurrentShipStatus() const { return ShipStatus; }
 
 	UPROPERTY()
-	FOnShipDestroyed OnShipDestroyed;
+	FOnShipReady OnShipReady;
+
+	UPROPERTY()
+	FOnShipLaunched OnShipLaunched;
+
+	UPROPERTY()
+	FOnShipLandingEvaluation OnShipLandingEvaluation;
 
 	UPROPERTY()
 	FOnShipLanded OnShipLanded;
-	
+
+	UPROPERTY()
+	FOnShipDestroyed OnShipDestroyed;
+
 	UFUNCTION()
 	void TriggerExplode(bool ShipExplodedFromCrash);
 

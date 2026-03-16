@@ -57,7 +57,7 @@ void APad::BeginPlay()
 
 	for (auto* Light : PadLightArray)
 	{
-		Light->SetIntensity(100000.0f);
+		Light->SetIntensity(250000.0f);
 		Light->SetLightColor(White);
 	}
 }
@@ -79,6 +79,21 @@ void APad::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void APad::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void APad::HandleShipReady()
+{
+
+}
+
+void APad::HandleShipLaunched()
+{
+
+}
+
+void APad::HandleShipLandingEvaluation()
+{
 
 }
 

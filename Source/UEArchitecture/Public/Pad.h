@@ -55,6 +55,15 @@ protected:
 	FLinearColor Green = FLinearColor(0, 1.0f, 0);
 
 	UFUNCTION()
+	void HandleShipReady();
+	
+	UFUNCTION()
+	void HandleShipLaunched();
+
+	UFUNCTION()
+	void HandleShipLandingEvaluation();
+
+	UFUNCTION()
 	void HandleShipLanded(APad* CurrentTouchdownPad);
 
 private:	

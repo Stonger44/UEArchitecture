@@ -93,7 +93,7 @@ void AShip::BeginPlay()
 	LandingEvaluationRotationThreshold = FMath::Cos(FMath::DegreesToRadians(MaxLandingEvaluationRotation));
 	UE_LOG(LogTemp, Warning, TEXT("Landing Evaluation Rotation Threshold: %f"), LandingEvaluationRotationThreshold);
 
-	ShipStatus = EShipStatus::Ready;
+	ShipReady();
 
 	ALanderGameMode* LanderGM = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
 	if (LanderGM)
@@ -241,6 +241,8 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 		{
 			ShipStatus = EShipStatus::Launched;
 			CurrentTouchdownTarget = nullptr;
+			OnShipLaunched.Broadcast();
+			// ShipLaunched();
 		}
 
 		ActivateThrusterEffects(canThrust);
@@ -340,6 +342,7 @@ void AShip::CheckShipTouchdown()
 	{
 		// After ship touches down, check to see if ship has fallen over
 		ShipStatus = EShipStatus::LandingEvaluation;
+		OnShipLandingEvaluation.Broadcast(CurrentTouchdownTarget);
 	}
 	else
 	{
@@ -390,6 +393,7 @@ void AShip::ShipReady()
 {
 	ShipStatus = EShipStatus::Ready;
 	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, READY!"));
+	OnShipReady.Broadcast();
 }
 
 void AShip::ShipLanded()
