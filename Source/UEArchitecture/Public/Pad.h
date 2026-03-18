@@ -58,7 +58,7 @@ protected:
 	void HandleShipReady(APad* CurrentTouchdownPad);
 	
 	UFUNCTION()
-	void HandleShipLaunched();
+	void HandleShipLaunched(APad* CurrentTouchdownPad);
 
 	UFUNCTION()
 	void HandleShipLandingEvaluation(APad* CurrentTouchdownPad);

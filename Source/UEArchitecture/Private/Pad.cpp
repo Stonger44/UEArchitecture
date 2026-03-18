@@ -103,11 +103,15 @@ void APad::HandleShipReady(APad* CurrentTouchdownPad)
 	}
 }
 
-void APad::HandleShipLaunched()
+void APad::HandleShipLaunched(APad* CurrentTouchdownPad)
 {
-	for (auto* Light : PadLightArray)
+	if (CurrentTouchdownPad == this)
 	{
-		Light->SetLightColor(White);
+		for (auto* Light : PadLightArray)
+		{
+			Light->SetLightColor(White);
+		}
+
 		if (!GetWorldTimerManager().IsTimerActive(LightBlinkTimer))
 		{
 			StartBlinkingLights();

@@ -249,10 +249,10 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 		if (ShipStatus == EShipStatus::Ready || ShipStatus == EShipStatus::LandingEvaluation)
 		{
 			ShipStatus = EShipStatus::Launched;
-			CurrentTouchdownTarget = nullptr;
+			GetWorldTimerManager().ClearTimer(FuelRefillTimer);
 			GetWorldTimerManager().ClearTimer(LandingEvaluationTimer);
-			OnShipLaunched.Broadcast();
-			// ShipLaunched();
+			OnShipLaunched.Broadcast(CurrentTouchdownTarget);
+			CurrentTouchdownTarget = nullptr;
 		}
 
 		ActivateThrusterEffects(canThrust);
@@ -404,6 +404,7 @@ void AShip::ShipReady()
 	ShipStatus = EShipStatus::Ready;
 	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, READY!"));
 	OnShipReady.Broadcast(CurrentTouchdownTarget);
+	AddFuel(MaxFuel - Fuel);
 }
 
 void AShip::ShipLanded()
