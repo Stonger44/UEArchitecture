@@ -138,10 +138,19 @@ void AShip::Tick(float DeltaTime)
 			{
 				if (CurrentTouchdownTarget)
 				{
-					if (CurrentTouchdownTarget->IsA(ALaunchPad::StaticClass()))
-					{
-						ShipReady();
-					}
+					//if (CurrentTouchdownTarget->IsA(ALaunchPad::StaticClass()))
+					//{
+					//	if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
+					//	{
+					//		GetWorldTimerManager().SetTimer(
+					//			LandingEvaluationTimer,
+					//			this,
+					//			&AShip::ShipReady,
+					//			3.0f,
+					//			false
+					//		);
+					//	}
+					//}
 					
 					//if (CurrentTouchdownTarget->IsA(ALandingPad::StaticClass()))
 					//{
@@ -241,6 +250,7 @@ void AShip::Thrust(const FInputActionValue& InputValue)
 		{
 			ShipStatus = EShipStatus::Launched;
 			CurrentTouchdownTarget = nullptr;
+			GetWorldTimerManager().ClearTimer(LandingEvaluationTimer);
 			OnShipLaunched.Broadcast();
 			// ShipLaunched();
 		}
@@ -393,7 +403,7 @@ void AShip::ShipReady()
 {
 	ShipStatus = EShipStatus::Ready;
 	UE_LOG(LogTemp, Warning, TEXT("On Launch Pad, READY!"));
-	OnShipReady.Broadcast();
+	OnShipReady.Broadcast(CurrentTouchdownTarget);
 }
 
 void AShip::ShipLanded()

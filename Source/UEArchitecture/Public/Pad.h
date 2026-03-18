@@ -55,13 +55,13 @@ protected:
 	FLinearColor Green = FLinearColor(0, 1.0f, 0);
 
 	UFUNCTION()
-	void HandleShipReady();
+	void HandleShipReady(APad* CurrentTouchdownPad);
 	
 	UFUNCTION()
 	void HandleShipLaunched();
 
 	UFUNCTION()
-	void HandleShipLandingEvaluation();
+	void HandleShipLandingEvaluation(APad* CurrentTouchdownPad);
 
 	UFUNCTION()
 	void HandleShipLanded(APad* CurrentTouchdownPad);
@@ -75,4 +75,18 @@ private:
 
 	UPROPERTY()
 	AShip* Ship = nullptr;
+
+	UPROPERTY()
+	bool bIsLightOn = false;
+
+	FTimerHandle LightBlinkTimer;
+
+	UFUNCTION()
+	void StartBlinkingLights();
+	
+	UFUNCTION()
+	void StopBlinkingLights();
+
+	UFUNCTION()
+	void BlinkLights();
 };

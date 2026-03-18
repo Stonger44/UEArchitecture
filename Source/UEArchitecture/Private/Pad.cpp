@@ -43,6 +43,9 @@ void APad::BeginPlay()
 	Ship = Cast<AShip>(ShipActor);
 	if (Ship)
 	{
+		Ship->OnShipReady.AddDynamic(this, &APad::HandleShipReady);
+		Ship->OnShipLaunched.AddDynamic(this, &APad::HandleShipLaunched);
+		Ship->OnShipLandingEvaluation.AddDynamic(this, &APad::HandleShipLandingEvaluation);
 		Ship->OnShipLanded.AddDynamic(this, &APad::HandleShipLanded);
 	}
 	else
@@ -60,6 +63,8 @@ void APad::BeginPlay()
 		Light->SetIntensity(250000.0f);
 		Light->SetLightColor(White);
 	}
+
+	StartBlinkingLights();
 }
 
 void APad::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -67,6 +72,9 @@ void APad::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	// Unsubscribe from Ship Events
 	if (Ship)
 	{
+		Ship->OnShipReady.RemoveDynamic(this, &APad::HandleShipReady);
+		Ship->OnShipLaunched.RemoveDynamic(this, &APad::HandleShipLaunched);
+		Ship->OnShipLandingEvaluation.RemoveDynamic(this, &APad::HandleShipLandingEvaluation);
 		Ship->OnShipLanded.RemoveDynamic(this, &APad::HandleShipLanded);
 	}
 	else
@@ -82,27 +90,74 @@ void APad::Tick(float DeltaTime)
 
 }
 
-void APad::HandleShipReady()
+void APad::HandleShipReady(APad* CurrentTouchdownPad)
 {
-
+	if (CurrentTouchdownPad == this)
+	{
+		StopBlinkingLights();
+		for (auto* Light : PadLightArray)
+		{
+			Light->SetVisibility(true);
+			Light->SetLightColor(Green);
+		}
+	}
 }
 
 void APad::HandleShipLaunched()
 {
-
+	for (auto* Light : PadLightArray)
+	{
+		Light->SetLightColor(White);
+		if (!GetWorldTimerManager().IsTimerActive(LightBlinkTimer))
+		{
+			StartBlinkingLights();
+		}
+	}
 }
 
-void APad::HandleShipLandingEvaluation()
+void APad::HandleShipLandingEvaluation(APad* CurrentTouchdownPad)
 {
-
+	if (CurrentTouchdownPad == this)
+	{
+		for (auto* Light : PadLightArray)
+		{
+			Light->SetLightColor(Red);
+		}
+	}
 }
 
 void APad::HandleShipLanded(APad* CurrentTouchdownPad)
 {
-	for (auto* Light : PadLightArray)
+	if (CurrentTouchdownPad == this)
 	{
-		Light->SetLightColor(Green);
+		StopBlinkingLights();
+		bIsLightOn = true;
+
+		for (auto* Light : PadLightArray)
+		{
+			Light->SetVisibility(bIsLightOn);
+			Light->SetLightColor(Green);
+		}
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Ship landed on: %s"), *CurrentTouchdownPad->GetName());
+}
+
+void APad::StartBlinkingLights()
+{
+	GetWorldTimerManager().SetTimer(LightBlinkTimer, this, &APad::BlinkLights, 0.5f, true);
+}
+
+void APad::StopBlinkingLights()
+{
+	GetWorldTimerManager().ClearTimer(LightBlinkTimer);
+}
+
+void APad::BlinkLights()
+{
+	bIsLightOn = !bIsLightOn;
+	for (auto* Light : PadLightArray)
+	{
+		Light->SetVisibility(bIsLightOn);
+	}
 }
