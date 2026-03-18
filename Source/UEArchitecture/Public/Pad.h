@@ -24,6 +24,12 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY()
+	AShip* Ship = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* DefaultSceneRoot;
 
@@ -32,6 +38,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Graphics")
 	UStaticMeshComponent* PadLights;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
+	UPointLightComponent* PadLight0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
 	UPointLightComponent* PadLight1;
@@ -54,30 +63,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
 	FLinearColor Green = FLinearColor(0, 1.0f, 0);
 
-	UFUNCTION()
-	void HandleShipReady(APad* CurrentTouchdownPad);
-	
-	UFUNCTION()
-	void HandleShipLaunched(APad* CurrentTouchdownPad);
-
-	UFUNCTION()
-	void HandleShipLandingEvaluation(APad* CurrentTouchdownPad);
-
-	UFUNCTION()
-	void HandleShipLanded(APad* CurrentTouchdownPad);
-
-	UFUNCTION()
-	void HandleShipCrashedIntoPad(APad* CurrentCrashedIntoPad);
-
-private:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	UPROPERTY()
 	TArray<UPointLightComponent*> PadLightArray;
-
-	UPROPERTY()
-	AShip* Ship = nullptr;
 
 	UPROPERTY()
 	bool bIsLightOn = false;
@@ -86,10 +73,28 @@ private:
 
 	UFUNCTION()
 	void StartBlinkingLights();
-	
+
 	UFUNCTION()
 	void StopBlinkingLights();
 
 	UFUNCTION()
 	void BlinkLights();
+
+	UFUNCTION()
+	virtual void HandleShipReady(APad* CurrentTouchdownPad);
+	
+	UFUNCTION()
+	virtual void HandleShipLaunched(APad* CurrentTouchdownPad);
+
+	UFUNCTION()
+	virtual void HandleShipLandingEvaluation(APad* CurrentTouchdownPad);
+
+	UFUNCTION()
+	virtual void HandleShipLanded(APad* CurrentTouchdownPad);
+
+	UFUNCTION()
+	virtual void HandleShipCrashedIntoPad(APad* CurrentCrashedIntoPad);
+
+private:	
+
 };

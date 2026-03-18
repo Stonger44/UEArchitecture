@@ -15,7 +15,8 @@ ALaunchPad::ALaunchPad()
 void ALaunchPad::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	HandleShipLanded(this);
 }
 
 // Called every frame

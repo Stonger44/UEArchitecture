@@ -20,6 +20,9 @@ APad::APad()
 	PadLights = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PadLights"));
 	PadLights->SetupAttachment(Pad);
 
+	PadLight0 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PadLight0"));
+	PadLight0->SetupAttachment(PadLights);
+
 	PadLight1 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PadLight1"));
 	PadLight1->SetupAttachment(PadLights);
 
@@ -63,7 +66,10 @@ void APad::BeginPlay()
 	{
 		Light->SetIntensity(250000.0f);
 		Light->SetLightColor(White);
+		Light->SetAttenuationRadius(30);
+		Light->SetSourceRadius(20);
 	}
+	PadLightArray.Add(PadLight0);
 
 	StartBlinkingLights();
 }

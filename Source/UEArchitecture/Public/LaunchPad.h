@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Pad.h"
 #include "LaunchPad.generated.h"
 
 UCLASS()
-class UEARCHITECTURE_API ALaunchPad : public AActor
+class UEARCHITECTURE_API ALaunchPad : public APad
 {
 	GENERATED_BODY()
 	

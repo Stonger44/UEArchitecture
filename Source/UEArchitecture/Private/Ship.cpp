@@ -106,6 +106,8 @@ void AShip::BeginPlay()
 	}
 
 	Fuel = MaxFuel;
+
+	CurrentTouchdownTarget = Cast<ALaunchPad>(UGameplayStatics::GetActorOfClass(GetWorld(), ALaunchPad::StaticClass()));
 }
 
 // Called every frame
@@ -138,35 +140,7 @@ void AShip::Tick(float DeltaTime)
 			{
 				if (CurrentTouchdownTarget)
 				{
-					//if (CurrentTouchdownTarget->IsA(ALaunchPad::StaticClass()))
-					//{
-					//	if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
-					//	{
-					//		GetWorldTimerManager().SetTimer(
-					//			LandingEvaluationTimer,
-					//			this,
-					//			&AShip::ShipReady,
-					//			3.0f,
-					//			false
-					//		);
-					//	}
-					//}
-					
-					//if (CurrentTouchdownTarget->IsA(ALandingPad::StaticClass()))
-					//{
-					//	if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
-					//	{
-					//		GetWorldTimerManager().SetTimer(
-					//			LandingEvaluationTimer,
-					//			this,
-					//			&AShip::ShipLanded,
-					//			3.0f,
-					//			false
-					//		);
-					//	}
-					//}
-
-					if (CurrentTouchdownTarget->IsA(APad::StaticClass()))
+					if (CurrentTouchdownTarget->IsA(ALaunchPad::StaticClass()))
 					{
 						if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
 						{
@@ -174,6 +148,20 @@ void AShip::Tick(float DeltaTime)
 								LandingEvaluationTimer,
 								this,
 								&AShip::ShipReady,
+								3.0f,
+								false
+							);
+						}
+					}
+					
+					if (CurrentTouchdownTarget->IsA(ALandingPad::StaticClass()))
+					{
+						if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
+						{
+							GetWorldTimerManager().SetTimer(
+								LandingEvaluationTimer,
+								this,
+								&AShip::ShipLanded,
 								3.0f,
 								false
 							);

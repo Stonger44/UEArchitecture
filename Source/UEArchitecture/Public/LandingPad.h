@@ -3,13 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Pad.h"
 #include "NiagaraComponent.h"
-#include "Ship.h"
 #include "LandingPad.generated.h"
 
 UCLASS()
-class UEARCHITECTURE_API ALandingPad : public AActor
+class UEARCHITECTURE_API ALandingPad : public APad
 {
 	GENERATED_BODY()
 	
@@ -29,10 +28,8 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-	UFUNCTION()
-	void HandleShipLanded(APad* CurrentTouchdownPad);
+	virtual void HandleShipLanded(APad* CurrentTouchdownPad);
 
 private:
-	UPROPERTY()
-	AShip* Ship = nullptr;
+
 };
