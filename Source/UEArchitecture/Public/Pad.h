@@ -66,6 +66,9 @@ protected:
 	UFUNCTION()
 	void HandleShipLanded(APad* CurrentTouchdownPad);
 
+	UFUNCTION()
+	void HandleShipCrashedIntoPad(APad* CurrentCrashedIntoPad);
+
 private:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

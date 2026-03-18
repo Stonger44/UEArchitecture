@@ -22,6 +22,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShipReady, APad*, Pad);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShipLaunched, APad*, Pad);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShipLandingEvaluation, APad*, Pad);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShipLanded, APad*, Pad);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShipCrashedIntoPad, APad*, Pad);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShipDestroyed);
 
 UCLASS()
@@ -64,6 +65,9 @@ public:
 
 	UPROPERTY()
 	FOnShipLanded OnShipLanded;
+
+	UPROPERTY()
+	FOnShipCrashedIntoPad OnShipCrashedIntoPad;
 
 	UPROPERTY()
 	FOnShipDestroyed OnShipDestroyed;

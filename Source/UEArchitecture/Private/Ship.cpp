@@ -173,7 +173,7 @@ void AShip::Tick(float DeltaTime)
 							GetWorldTimerManager().SetTimer(
 								LandingEvaluationTimer,
 								this,
-								&AShip::ShipLanded,
+								&AShip::ShipReady,
 								3.0f,
 								false
 							);
@@ -204,12 +204,11 @@ void AShip::NotifyHit
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
-	if (ShipStatus == EShipStatus::Launched)
+	if (Other && Other != this)
 	{
-		if (Other && Other != this)
+		if (ShipStatus == EShipStatus::Launched)
 		{
-			//if (Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
-			if (Other->IsA(APad::StaticClass()) || Other->IsA(ALaunchPad::StaticClass()) || Other->IsA(ALandingPad::StaticClass()))
+			if (Other->IsA(APad::StaticClass()))
 			{
 				CurrentTouchdownTarget = Cast<APad>(Other);
 				CheckShipTouchdown();
@@ -217,6 +216,15 @@ void AShip::NotifyHit
 			else
 			{
 				ShipCrashed();
+			}
+		}
+
+		if (ShipStatus == EShipStatus::Crashed)
+		{
+			if (Other->IsA(APad::StaticClass()))
+			{
+				CurrentTouchdownTarget = Cast<APad>(Other);
+				OnShipCrashedIntoPad.Broadcast(CurrentTouchdownTarget);
 			}
 		}
 	}

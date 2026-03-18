@@ -47,6 +47,7 @@ void APad::BeginPlay()
 		Ship->OnShipLaunched.AddDynamic(this, &APad::HandleShipLaunched);
 		Ship->OnShipLandingEvaluation.AddDynamic(this, &APad::HandleShipLandingEvaluation);
 		Ship->OnShipLanded.AddDynamic(this, &APad::HandleShipLanded);
+		Ship->OnShipCrashedIntoPad.AddDynamic(this, &APad::HandleShipCrashedIntoPad);
 	}
 	else
 	{
@@ -76,6 +77,7 @@ void APad::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		Ship->OnShipLaunched.RemoveDynamic(this, &APad::HandleShipLaunched);
 		Ship->OnShipLandingEvaluation.RemoveDynamic(this, &APad::HandleShipLandingEvaluation);
 		Ship->OnShipLanded.RemoveDynamic(this, &APad::HandleShipLanded);
+		Ship->OnShipCrashedIntoPad.RemoveDynamic(this, &APad::HandleShipCrashedIntoPad);
 	}
 	else
 	{
@@ -145,6 +147,17 @@ void APad::HandleShipLanded(APad* CurrentTouchdownPad)
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Ship landed on: %s"), *CurrentTouchdownPad->GetName());
+}
+
+void APad::HandleShipCrashedIntoPad(APad* CurrentCrashedIntoPad)
+{
+	if (CurrentCrashedIntoPad == this)
+	{
+		for (auto* Light : PadLightArray)
+		{
+			Light->SetLightColor(Red);
+		}
+	}
 }
 
 void APad::StartBlinkingLights()
