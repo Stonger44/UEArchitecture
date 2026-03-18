@@ -57,6 +57,7 @@ void APad::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Pad: No Ship found in level!"));
 	}
 
+	PadLightArray.Add(PadLight0);
 	PadLightArray.Add(PadLight1);
 	PadLightArray.Add(PadLight2);
 	PadLightArray.Add(PadLight3);
@@ -64,12 +65,22 @@ void APad::BeginPlay()
 
 	for (auto* Light : PadLightArray)
 	{
-		Light->SetIntensity(250000.0f);
 		Light->SetLightColor(White);
-		Light->SetAttenuationRadius(30);
-		Light->SetSourceRadius(20);
+
+		if (Light == PadLight0)
+		{
+			Light->SetIntensity(100000.0f);
+			Light->SetAttenuationRadius(1000);
+			Light->SetSourceRadius(0);
+		}
+		else
+		{
+			Light->SetIntensity(250000.0f);
+			Light->SetLightColor(White);
+			Light->SetAttenuationRadius(30);
+			Light->SetSourceRadius(20);
+		}
 	}
-	PadLightArray.Add(PadLight0);
 
 	StartBlinkingLights();
 }
