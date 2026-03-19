@@ -40,9 +40,6 @@ protected:
 	UStaticMeshComponent* PadLights;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
-	UPointLightComponent* PadLight0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")
 	UPointLightComponent* PadLight1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pad | Lights")

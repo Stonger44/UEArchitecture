@@ -20,9 +20,6 @@ APad::APad()
 	PadLights = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PadLights"));
 	PadLights->SetupAttachment(Pad);
 
-	PadLight0 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PadLight0"));
-	PadLight0->SetupAttachment(PadLights);
-
 	PadLight1 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PadLight1"));
 	PadLight1->SetupAttachment(PadLights);
 
@@ -34,6 +31,19 @@ APad::APad()
 
 	PadLight4 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PadLight4"));
 	PadLight4->SetupAttachment(PadLights);
+
+	PadLightArray.Add(PadLight1);
+	PadLightArray.Add(PadLight2);
+	PadLightArray.Add(PadLight3);
+	PadLightArray.Add(PadLight4);
+
+	for (auto* Light : PadLightArray)
+	{
+		Light->SetIntensity(50000);
+		Light->SetLightColor(White);
+		Light->SetAttenuationRadius(700);
+		Light->SetSourceRadius(10);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -57,29 +67,9 @@ void APad::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Pad: No Ship found in level!"));
 	}
 
-	PadLightArray.Add(PadLight0);
-	PadLightArray.Add(PadLight1);
-	PadLightArray.Add(PadLight2);
-	PadLightArray.Add(PadLight3);
-	PadLightArray.Add(PadLight4);
-
-	for (auto* Light : PadLightArray)
+	if (PadLightArray.IsEmpty())
 	{
-		Light->SetLightColor(White);
-
-		if (Light == PadLight0)
-		{
-			Light->SetIntensity(100000.0f);
-			Light->SetAttenuationRadius(1000);
-			Light->SetSourceRadius(0);
-		}
-		else
-		{
-			Light->SetIntensity(250000.0f);
-			Light->SetLightColor(White);
-			Light->SetAttenuationRadius(30);
-			Light->SetSourceRadius(20);
-		}
+		UE_LOG(LogTemp, Error, TEXT("PadLightArray is Empty!"))
 	}
 
 	StartBlinkingLights();
