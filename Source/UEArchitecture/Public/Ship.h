@@ -172,6 +172,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX | Thrusters")
 	UAudioComponent* ThrusterAudio;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX | Fuel")
+	UAudioComponent* FuelGlugAudio;
+
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
 

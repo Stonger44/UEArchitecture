@@ -31,6 +31,10 @@ AShip::AShip()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom);
 
+	FuelGlugAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("FuelGlugAudio"));
+	FuelGlugAudio->SetupAttachment(ShipMesh);
+	FuelGlugAudio->bAutoActivate = false;
+
 	Thrusters = CreateDefaultSubobject<USceneComponent>(TEXT("Thrusters"));
 	Thrusters->SetupAttachment(ShipMesh);
 
@@ -316,6 +320,8 @@ void AShip::AddFuel(float FuelToAdd)
 			0.01f,
 			true
 		);
+
+		FuelGlugAudio->Play();
 	}
 }
 
@@ -334,6 +340,7 @@ void AShip::RefillFuelTimer()
 	if (FuelRefillRemaining <= 0 || Fuel >= MaxFuel)
 	{
 		GetWorldTimerManager().ClearTimer(FuelRefillTimer);
+		FuelGlugAudio->Stop();
 	}
 }
 
