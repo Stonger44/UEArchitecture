@@ -26,7 +26,7 @@ protected:
 	UStaticMeshComponent* PickupMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pickup | Value")
-	float PickupValue = 20;
+	float PickupValue = 50;
 
 	UFUNCTION()
 	void OnBeginOverlap

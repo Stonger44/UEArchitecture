@@ -18,6 +18,6 @@ struct FLevelData : public FTableRowBase
 	FText LevelTitle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MaxFuel;
+	float FuelDrainRate;
 
 };

@@ -41,7 +41,7 @@ void ALanderGameMode::BeginPlay()
 
 		if (Row != nullptr)
 		{
-			MaxFuel = Row->MaxFuel;
+			FuelDrainRate = Row->FuelDrainRate;
 			LevelTitle = Row->LevelTitle;
 		}
 	}

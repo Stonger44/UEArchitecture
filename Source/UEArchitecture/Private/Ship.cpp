@@ -102,7 +102,7 @@ void AShip::BeginPlay()
 	ALanderGameMode* LanderGM = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
 	if (LanderGM)
 	{
-		MaxFuel = LanderGM->GetMaxFuel();
+		FuelDrainRate = LanderGM->GetFuelDrainRate();
 	}
 	else
 	{

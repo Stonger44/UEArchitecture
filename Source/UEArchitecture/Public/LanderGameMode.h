@@ -24,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Level")
-	float GetMaxFuel() const { return MaxFuel; }
+	float GetFuelDrainRate() const { return FuelDrainRate; }
 
 	UFUNCTION(BlueprintCallable, Category = "Level")
 	FText GetLevelTitle() const { return LevelTitle; }
@@ -66,7 +66,7 @@ private:
 
 	FTimerHandle TriggerEndPlayTimer;
 
-	float MaxFuel;
+	float FuelDrainRate;
 
 	FText LevelTitle;
 
