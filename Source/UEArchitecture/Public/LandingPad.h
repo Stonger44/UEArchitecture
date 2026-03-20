@@ -16,8 +16,8 @@ public:
 	// Sets default values for this actor's properties
 	ALandingPad();
 
-	UPROPERTY(EditAnywhere, Category = "FX")
-	UNiagaraSystem* CelebrationEffect;
+	UPROPERTY(EditAnywhere, Category = "VFX")
+	UNiagaraSystem* Fireworks;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -29,6 +29,13 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	virtual void HandleShipLanded(APad* CurrentTouchdownPad);
+
+	UPROPERTY(EditAnywhere, Category = "VFX")
+	TArray<FVector> FireworkOffsets = {
+		FVector(400.f, 0.f, 0.f),
+		FVector(400.f, 200.f, 0.f),
+		FVector(400.f, -200.f, 0.f)
+	};
 
 private:
 

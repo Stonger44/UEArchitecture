@@ -496,14 +496,14 @@ void AShip::DisableShipControls()
 	}
 }
 
-void AShip::SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystemToSpawn, FVector LocationOffset)
+void AShip::SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystemToSpawn)
 {
 	if (NiagaraSystemToSpawn)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(
 			GetWorld(),
 			NiagaraSystemToSpawn,
-			GetActorLocation() + LocationOffset
+			GetActorLocation()
 		);
 	}
 }

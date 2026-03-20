@@ -36,5 +36,18 @@ void ALandingPad::HandleShipLanded(APad* CurrentTouchdownPad)
 {
 	Super::HandleShipLanded(CurrentTouchdownPad);
 
-	UE_LOG(LogTemp, Warning, TEXT("FIRING THE FIREWORKS!!!!"));
+	if (Fireworks)
+	{
+		if (!FireworkOffsets.IsEmpty())
+		{
+			for (const FVector& Location : FireworkOffsets)
+			{
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+					GetWorld(),
+					Fireworks,
+					GetActorLocation() + Location
+				);
+			}
+		}
+	}
 }

@@ -217,7 +217,7 @@ private:
 
 	void RefillFuelTimer();
 
-	void SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystemToSpawn, FVector LocationOffset = FVector::ZeroVector);
+	void SpawnNiagaraSystem(UNiagaraSystem* NiagaraSystemToSpawn);
 
 	void ShakeCamera();
 
