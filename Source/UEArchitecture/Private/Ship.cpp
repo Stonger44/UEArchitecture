@@ -180,6 +180,18 @@ void AShip::Tick(float DeltaTime)
 			}
 		}
 	}
+
+	if (bIsPanningCamera)
+	{
+		FVector CurrentPos = Camera->GetRelativeLocation();
+		FVector NewPos = FMath::VInterpTo(CurrentPos, LevelSuccessCameraPosition, DeltaTime, 1.5f);
+		Camera->SetRelativeLocation(NewPos);
+
+		if (NewPos == LevelSuccessCameraPosition)
+		{
+			bIsPanningCamera = false;
+		}
+	}
 }
 
 void AShip::NotifyHit
@@ -419,7 +431,9 @@ void AShip::ShipLanded()
 	ActivateThrusterEffects(bIsThrusting);
 
 	OnShipLanded.Broadcast(CurrentTouchdownTarget);
-	// UE_LOG(LogTemp, Warning, TEXT("SHIP HAS LANDED!!!!"));
+	
+	bIsPanningCamera = true;
+	LevelSuccessCameraPosition = Camera->GetRelativeLocation() + LevelSuccessCameraOffset;
 }
 
 void AShip::ShipCrashed()

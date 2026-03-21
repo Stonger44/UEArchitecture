@@ -175,6 +175,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | SFX | Fuel")
 	UAudioComponent* FuelGlugAudio;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Camera")
+	FVector LevelSuccessCameraOffset = FVector(-800, 0, 800);
+
 	void Thrust(const FInputActionValue& inputValue);
 	void Rotate(const FInputActionValue& inputValue);
 
@@ -199,6 +202,9 @@ private:
 
 	FTimerHandle FuelRefillTimer;
 	FTimerHandle LandingEvaluationTimer;
+
+	bool bIsPanningCamera = false;
+	FVector LevelSuccessCameraPosition;
 
 	void CheckShipTouchdown();
 	bool IsShipRotationSafe(float RotationThreshold) const;
