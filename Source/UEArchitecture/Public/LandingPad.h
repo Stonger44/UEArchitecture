@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "VFX")
 	UNiagaraSystem* Fireworks;
 
+	UPROPERTY(EditAnywhere, Category = "VFX")
+	UNiagaraSystem* DifferentFireworks;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

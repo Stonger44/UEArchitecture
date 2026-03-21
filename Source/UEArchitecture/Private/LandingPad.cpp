@@ -47,6 +47,12 @@ void ALandingPad::HandleShipLanded(APad* CurrentTouchdownPad)
 					Fireworks,
 					GetActorLocation() + Location
 				);
+
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+					GetWorld(),
+					DifferentFireworks,
+					GetActorLocation() + Location
+				);
 			}
 		}
 	}
