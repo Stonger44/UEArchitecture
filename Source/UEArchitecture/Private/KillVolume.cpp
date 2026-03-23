@@ -51,6 +51,8 @@ void UKillVolume::OnBeginOverlap
 	const FHitResult& SweepResult
 )
 {
+	UE_LOG(LogTemp, Warning, TEXT("KillVolume is overlapping something!"));
+
 	// Check to make sure OtherActor is Ship
 	if (OtherActor && OtherActor != GetOwner() && OtherActor->IsA(AShip::StaticClass()))
 	{

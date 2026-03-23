@@ -411,6 +411,10 @@ bool AShip::HasShipStoppedMoving() const
 
 void AShip::TriggerExplode(bool ShipExplodedFromCrash)
 {
+	if (ShipStatus == EShipStatus::Exploded)
+	{
+		return;
+	}
 	ShipExploded(ShipExplodedFromCrash);
 }
 
