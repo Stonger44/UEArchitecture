@@ -184,12 +184,29 @@ void AShip::Tick(float DeltaTime)
 	if (bIsPanningCamera)
 	{
 		FVector CurrentPos = Camera->GetRelativeLocation();
-		FVector NewPos = FMath::VInterpTo(CurrentPos, LevelSuccessCameraPosition, DeltaTime, 1.5f);
-		Camera->SetRelativeLocation(NewPos);
 
-		if (NewPos == LevelSuccessCameraPosition)
+		if (CameraPanPhase == ECameraPanPhase::PanUp)
 		{
-			bIsPanningCamera = false;
+			FVector PanUpTarget = FVector(CurrentPos.X, CurrentPos.Y, LevelSuccessCameraPosition.Z);
+			FVector NewPos = FMath::VInterpTo(CurrentPos, PanUpTarget, DeltaTime, 3.0f);
+			Camera->SetRelativeLocation(NewPos);
+
+			if (FVector::Dist(NewPos, PanUpTarget) < 10.f)
+			{
+				CameraPanPhase = ECameraPanPhase::ZoomOut;
+			}
+		}
+
+		if (CameraPanPhase == ECameraPanPhase::ZoomOut)
+		{
+			FVector NewPos = FMath::VInterpTo(CurrentPos, LevelSuccessCameraPosition, DeltaTime, 1.5f);
+			Camera->SetRelativeLocation(NewPos);
+
+			if (FVector::Dist(NewPos, LevelSuccessCameraPosition) < 10.f)
+			{
+				Camera->SetRelativeLocation(LevelSuccessCameraPosition);
+				bIsPanningCamera = false;
+			}
 		}
 	}
 }
@@ -392,11 +409,6 @@ bool AShip::IsShipRotationSafe(float RotationThreshold) const
 
 	// DotProduct for ship alignment
 	float shipUpAlignment = FVector::DotProduct(shipUpVector, FVector::UpVector);
-	// UE_LOG(LogTemp, Warning, TEXT("Ship Up Alignment: %f"), shipUpAlignment);
-
-	// Compare ship alignment with threshold
-	// UE_LOG(LogTemp, Warning, TEXT("Rotation Threshold: %f"), RotationThreshold);
-	// UE_LOG(LogTemp, Warning, TEXT("Ship Rotation is Safe: %s"), shipUpAlignment >= RotationThreshold ? TEXT("True") : TEXT("False"));
 
 	return shipUpAlignment >= RotationThreshold;
 }
@@ -436,6 +448,17 @@ void AShip::ShipLanded()
 
 	OnShipLanded.Broadcast(CurrentTouchdownTarget);
 	
+	GetWorldTimerManager().SetTimer(
+		CameraPanTimer,
+		this,
+		&AShip::TriggerCameraPan,
+		1.5f,
+		false
+	);
+}
+
+void AShip::TriggerCameraPan()
+{
 	bIsPanningCamera = true;
 	LevelSuccessCameraPosition = Camera->GetRelativeLocation() + LevelSuccessCameraOffset;
 }

@@ -202,9 +202,13 @@ private:
 
 	FTimerHandle FuelRefillTimer;
 	FTimerHandle LandingEvaluationTimer;
+	FTimerHandle CameraPanTimer;
 
 	bool bIsPanningCamera = false;
 	FVector LevelSuccessCameraPosition;
+	ECameraPanPhase CameraPanPhase = ECameraPanPhase::PanUp;
+
+	void TriggerCameraPan();
 
 	void CheckShipTouchdown();
 	bool IsShipRotationSafe(float RotationThreshold) const;

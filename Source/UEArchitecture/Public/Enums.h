@@ -24,3 +24,10 @@ enum class EEndPlayState : uint8
 	LevelSuccess	UMETA(DisplayName = "LevelSuccess"),
 	GameComplete    UMETA(DisplayName = "GameComplete")
 };
+
+UENUM(BlueprintType)
+enum class ECameraPanPhase : uint8
+{
+	PanUp	UMETA(DisplayName = "PanUp"),
+	ZoomOut	UMETA(DisplayName = "ZoomOut")
+};
