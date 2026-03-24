@@ -3,6 +3,7 @@
 
 #include "LandingPad.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -53,7 +54,19 @@ void ALandingPad::HandleShipLanded(APad* CurrentTouchdownPad)
 					DifferentFireworks,
 					GetActorLocation() + Location
 				);
+
+				if (SC_FireworkWhistle)
+				{
+					UGameplayStatics::PlaySoundAtLocation(this, SC_FireworkWhistle, GetActorLocation());
+				}
+
+				if (SC_FireworkExplosion)
+				{
+					UGameplayStatics::PlaySoundAtLocation(this, SC_FireworkExplosion, GetActorLocation());
+				}
 			}
 		}
 	}
 }
+
+
