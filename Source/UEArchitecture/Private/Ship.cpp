@@ -138,76 +138,12 @@ void AShip::Tick(float DeltaTime)
 
 	if (ShipStatus == EShipStatus::LandingEvaluation)
 	{
-		if (HasShipStoppedMoving())
-		{
-			if (IsShipRotationSafe(LandingEvaluationRotationThreshold))
-			{
-				if (CurrentTouchdownTarget)
-				{
-					if (CurrentTouchdownTarget->IsA(ALaunchPad::StaticClass()))
-					{
-						if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
-						{
-							GetWorldTimerManager().SetTimer(
-								LandingEvaluationTimer,
-								this,
-								&AShip::ShipReady,
-								3.0f,
-								false
-							);
-						}
-					}
-					
-					if (CurrentTouchdownTarget->IsA(ALandingPad::StaticClass()))
-					{
-						if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
-						{
-							GetWorldTimerManager().SetTimer(
-								LandingEvaluationTimer,
-								this,
-								&AShip::ShipLanded,
-								3.0f,
-								false
-							);
-						}
-					}
-				}
-				
-			}
-			else
-			{
-				ShipCrashed();
-			}
-		}
+		EvaluateLanding();
 	}
 
 	if (bIsPanningCamera)
 	{
-		FVector CurrentPos = Camera->GetRelativeLocation();
-
-		if (CameraPanPhase == ECameraPanPhase::PanUp)
-		{
-			FVector PanUpTarget = FVector(CurrentPos.X, CurrentPos.Y, LevelSuccessCameraPosition.Z);
-			FVector NewPos = FMath::VInterpTo(CurrentPos, PanUpTarget, DeltaTime, 3.0f);
-			Camera->SetRelativeLocation(NewPos);
-
-			if (FVector::Dist(NewPos, PanUpTarget) < 10.f)
-			{
-				CameraPanPhase = ECameraPanPhase::ZoomOut;
-			}
-		}
-
-		if (CameraPanPhase == ECameraPanPhase::ZoomOut)
-		{
-			FVector NewPos = FMath::VInterpTo(CurrentPos, LevelSuccessCameraPosition, DeltaTime, 1.5f);
-			Camera->SetRelativeLocation(NewPos);
-
-			if (FVector::Dist(NewPos, LevelSuccessCameraPosition) < 10.f)
-			{
-				Camera->SetRelativeLocation(LevelSuccessCameraPosition);
-				bIsPanningCamera = false;
-			}
-		}
+		PanCamera(DeltaTime);
 	}
 }
 
@@ -378,6 +314,80 @@ float AShip::GetFuelPercent() const
 	return Fuel / MaxFuel;
 }
 
+void AShip::EvaluateLanding()
+{
+	if (HasShipStoppedMoving())
+	{
+		if (IsShipRotationSafe(LandingEvaluationRotationThreshold))
+		{
+			if (CurrentTouchdownTarget)
+			{
+				if (CurrentTouchdownTarget->IsA(ALaunchPad::StaticClass()))
+				{
+					if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
+					{
+						GetWorldTimerManager().SetTimer(
+							LandingEvaluationTimer,
+							this,
+							&AShip::ShipReady,
+							3.0f,
+							false
+						);
+					}
+				}
+
+				if (CurrentTouchdownTarget->IsA(ALandingPad::StaticClass()))
+				{
+					if (!GetWorldTimerManager().IsTimerActive(LandingEvaluationTimer))
+					{
+						GetWorldTimerManager().SetTimer(
+							LandingEvaluationTimer,
+							this,
+							&AShip::ShipLanded,
+							3.0f,
+							false
+						);
+					}
+				}
+			}
+
+		}
+		else
+		{
+			ShipCrashed();
+		}
+	}
+}
+
+void AShip::PanCamera(float DeltaTime)
+{
+	FVector CurrentPos = Camera->GetRelativeLocation();
+
+	if (CameraPanPhase == ECameraPanPhase::PanUp)
+	{
+		FVector PanUpTarget = FVector(CurrentPos.X, CurrentPos.Y, LevelSuccessCameraPosition.Z);
+		FVector NewPos = FMath::VInterpTo(CurrentPos, PanUpTarget, DeltaTime, 3.0f);
+		Camera->SetRelativeLocation(NewPos);
+
+		if (FVector::Dist(NewPos, PanUpTarget) < 10.f)
+		{
+			CameraPanPhase = ECameraPanPhase::ZoomOut;
+		}
+	}
+
+	if (CameraPanPhase == ECameraPanPhase::ZoomOut)
+	{
+		FVector NewPos = FMath::VInterpTo(CurrentPos, LevelSuccessCameraPosition, DeltaTime, 1.5f);
+		Camera->SetRelativeLocation(NewPos);
+
+		if (FVector::Dist(NewPos, LevelSuccessCameraPosition) < 10.f)
+		{
+			Camera->SetRelativeLocation(LevelSuccessCameraPosition);
+			bIsPanningCamera = false;
+		}
+	}
+}
+
 void AShip::CheckShipTouchdown()
 {
 	if (IsShipSpeedSafe() && IsShipRotationSafe(InitialLandingRotationThreshold))
@@ -418,7 +428,7 @@ bool AShip::HasShipStoppedMoving() const
 	FVector LinearVelocity = ShipMesh->GetPhysicsLinearVelocity();
 	FVector AngularVelocity = ShipMesh->GetPhysicsAngularVelocityInDegrees();
 
-	return (LinearVelocity.Size() == 0 && AngularVelocity.Size() == 0);
+	return (LinearVelocity.Size() < 5.0f && AngularVelocity.Size() < 1.0f);
 }
 
 void AShip::TriggerExplode(bool ShipExplodedFromCrash)
@@ -452,7 +462,7 @@ void AShip::ShipLanded()
 		CameraPanTimer,
 		this,
 		&AShip::TriggerCameraPan,
-		1.5f,
+		1.25f,
 		false
 	);
 }

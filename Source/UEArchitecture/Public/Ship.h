@@ -232,4 +232,8 @@ private:
 	void ShakeCamera();
 
 	void ActivateThrusterEffects(bool ActivateThrusters);
+
+	void EvaluateLanding();
+
+	void PanCamera(float DeltaTime);
 };
