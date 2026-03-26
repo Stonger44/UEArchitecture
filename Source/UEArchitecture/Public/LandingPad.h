@@ -44,7 +44,7 @@ protected:
 	USoundCue* SC_FireworkWhistle;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
-	USoundCue* SC_FireworkExplosion;
+	USoundCue* SC_FireworkBang;
 
 	virtual void HandleShipLanded(APad* CurrentTouchdownPad);
 

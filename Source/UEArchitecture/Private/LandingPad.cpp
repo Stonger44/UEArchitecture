@@ -60,9 +60,9 @@ void ALandingPad::HandleShipLanded(APad* CurrentTouchdownPad)
 					UGameplayStatics::PlaySoundAtLocation(this, SC_FireworkWhistle, GetActorLocation());
 				}
 
-				if (SC_FireworkExplosion)
+				if (SC_FireworkBang)
 				{
-					UGameplayStatics::PlaySoundAtLocation(this, SC_FireworkExplosion, GetActorLocation());
+					UGameplayStatics::PlaySoundAtLocation(this, SC_FireworkBang, GetActorLocation());
 				}
 			}
 		}
