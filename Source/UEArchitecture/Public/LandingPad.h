@@ -50,4 +50,12 @@ protected:
 
 private:
 
+	FTimerHandle FireworkWhistleTimer;
+	FTimerHandle FireworkBangTimer;
+
+	bool bAreFireworksBangingOff = false;
+
+	void TriggerFireworkWhistleAudio();
+	void TriggerFireworkBangAudio();
+	void PlayFireworkBangLoopAudio();
 };

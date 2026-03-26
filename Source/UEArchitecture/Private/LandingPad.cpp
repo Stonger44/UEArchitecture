@@ -31,13 +31,27 @@ void ALandingPad::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bAreFireworksBangingOff)
+	{
+		if (!GetWorldTimerManager().IsTimerActive(FireworkBangTimer))
+		{
+			float NextBangDelay = FMath::RandRange(0.1f, 0.2f);
+			GetWorldTimerManager().SetTimer(
+				FireworkBangTimer,
+				this,
+				&ALandingPad::PlayFireworkBangLoopAudio,
+				NextBangDelay,
+				false
+			);
+		}
+	}
 }
 
 void ALandingPad::HandleShipLanded(APad* CurrentTouchdownPad)
 {
 	Super::HandleShipLanded(CurrentTouchdownPad);
 
-	if (Fireworks)
+	if (Fireworks && DifferentFireworks)
 	{
 		if (!FireworkOffsets.IsEmpty())
 		{
@@ -54,19 +68,70 @@ void ALandingPad::HandleShipLanded(APad* CurrentTouchdownPad)
 					DifferentFireworks,
 					GetActorLocation() + Location
 				);
-
-				if (SC_FireworkWhistle)
-				{
-					UGameplayStatics::PlaySoundAtLocation(this, SC_FireworkWhistle, GetActorLocation());
-				}
-
-				if (SC_FireworkBang)
-				{
-					UGameplayStatics::PlaySoundAtLocation(this, SC_FireworkBang, GetActorLocation());
-				}
 			}
+		}
+	}
+
+	if (SC_FireworkWhistle)
+	{
+		GetWorldTimerManager().SetTimer(
+			FireworkWhistleTimer,
+			this,
+			&ALandingPad::TriggerFireworkWhistleAudio,
+			1.0f,
+			false
+		);
+	}
+
+	if (SC_FireworkBang)
+	{
+		GetWorldTimerManager().SetTimer(
+			FireworkBangTimer,
+			this,
+			&ALandingPad::TriggerFireworkBangAudio,
+			2.5f,
+			false
+		);
+	}
+}
+
+void ALandingPad::TriggerFireworkWhistleAudio()
+{
+	if (SC_FireworkWhistle)
+	{
+		for (const FVector& Location : FireworkOffsets)
+		{
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				SC_FireworkWhistle,
+				GetActorLocation() + Location
+			);
 		}
 	}
 }
 
+void ALandingPad::TriggerFireworkBangAudio()
+{
+	if (SC_FireworkBang)
+	{
+		for (const FVector& Location : FireworkOffsets)
+		{
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				SC_FireworkBang,
+				GetActorLocation() + Location
+			);
+		}
 
+		bAreFireworksBangingOff = true;
+	}
+}
+
+void ALandingPad::PlayFireworkBangLoopAudio()
+{
+	UGameplayStatics::PlaySoundAtLocation(
+		this,
+		SC_FireworkBang,
+		GetActorLocation()
+	);
+}
