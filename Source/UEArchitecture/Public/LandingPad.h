@@ -46,16 +46,22 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
 	USoundCue* SC_FireworkBang;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fireworks")
+	float FireworkBangAudioDelayMin = 0.08f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fireworks")
+	float FireworkBangAudioDelayMax = 0.12f;
+
 	virtual void HandleShipLanded(APad* CurrentTouchdownPad);
 
 private:
 
+
 	FTimerHandle FireworkWhistleTimer;
 	FTimerHandle FireworkBangTimer;
 
-	bool bAreFireworksBangingOff = false;
+	bool bHaveInitialFireworksFired = false;
 
 	void TriggerFireworkWhistleAudio();
 	void TriggerFireworkBangAudio();
-	void PlayFireworkBangLoopAudio();
 };

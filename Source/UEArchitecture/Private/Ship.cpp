@@ -114,6 +114,15 @@ void AShip::BeginPlay()
 	CurrentTouchdownTarget = Cast<ALaunchPad>(UGameplayStatics::GetActorOfClass(GetWorld(), ALaunchPad::StaticClass()));
 }
 
+void AShip::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	GetWorldTimerManager().ClearTimer(FuelRefillTimer);
+	GetWorldTimerManager().ClearTimer(LandingEvaluationTimer);
+	GetWorldTimerManager().ClearTimer(CameraPanTimer);
+}
+
 // Called every frame
 void AShip::Tick(float DeltaTime)
 {

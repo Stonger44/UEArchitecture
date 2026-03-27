@@ -23,28 +23,16 @@ void ALandingPad::BeginPlay()
 
 void ALandingPad::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	Super::EndPlay(EndPlayReason);
 
+	GetWorldTimerManager().ClearTimer(FireworkBangTimer);
+	GetWorldTimerManager().ClearTimer(FireworkWhistleTimer);
 }
 
 // Called every frame
 void ALandingPad::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (bAreFireworksBangingOff)
-	{
-		if (!GetWorldTimerManager().IsTimerActive(FireworkBangTimer))
-		{
-			float NextBangDelay = FMath::RandRange(0.1f, 0.2f);
-			GetWorldTimerManager().SetTimer(
-				FireworkBangTimer,
-				this,
-				&ALandingPad::PlayFireworkBangLoopAudio,
-				NextBangDelay,
-				false
-			);
-		}
-	}
 }
 
 void ALandingPad::HandleShipLanded(APad* CurrentTouchdownPad)
@@ -97,22 +85,29 @@ void ALandingPad::HandleShipLanded(APad* CurrentTouchdownPad)
 
 void ALandingPad::TriggerFireworkWhistleAudio()
 {
-	if (SC_FireworkWhistle)
+	for (const FVector& Location : FireworkOffsets)
 	{
-		for (const FVector& Location : FireworkOffsets)
-		{
-			UGameplayStatics::PlaySoundAtLocation(
-				this,
-				SC_FireworkWhistle,
-				GetActorLocation() + Location
-			);
-		}
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			SC_FireworkWhistle,
+			GetActorLocation() + Location
+		);
 	}
 }
 
 void ALandingPad::TriggerFireworkBangAudio()
 {
-	if (SC_FireworkBang)
+	if (bHaveInitialFireworksFired)
+	{
+		int32 RandomIndex = FMath::RandRange(0, FireworkOffsets.Num() - 1);
+
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			SC_FireworkBang,
+			GetActorLocation() + FireworkOffsets[RandomIndex]
+		);
+	}
+	else
 	{
 		for (const FVector& Location : FireworkOffsets)
 		{
@@ -123,15 +118,15 @@ void ALandingPad::TriggerFireworkBangAudio()
 			);
 		}
 
-		bAreFireworksBangingOff = true;
+		bHaveInitialFireworksFired = true;
 	}
-}
 
-void ALandingPad::PlayFireworkBangLoopAudio()
-{
-	UGameplayStatics::PlaySoundAtLocation(
+	float NextBangDelay = FMath::RandRange(FireworkBangAudioDelayMin, FireworkBangAudioDelayMax);
+	GetWorldTimerManager().SetTimer(
+		FireworkBangTimer,
 		this,
-		SC_FireworkBang,
-		GetActorLocation()
+		&ALandingPad::TriggerFireworkBangAudio,
+		NextBangDelay,
+		false
 	);
 }
